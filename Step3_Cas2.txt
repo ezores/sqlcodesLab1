@@ -1,0 +1,150 @@
+Connexion au système:
+
+L'adresse e-mail doit exister dans la base de données.
+Le mot de passe doit correspondre à l'adresse e-mail.
+Fournir des messages d'erreur significatifs pour :
+E-mail non valide.
+Mot de passe incorrect.
+
+1. Connexion client et retour approprié:
+	CREATE OR REPLACE PROCEDURE p_connexionClient(
+		p_courriel     IN VARCHAR2,
+		p_motDePasse   IN VARCHAR2,
+		p_resultat     OUT VARCHAR2
+	) AS
+		v_count INTEGER;
+		v_correctPassword INTEGER;
+	BEGIN
+		-- Check if the email exists
+		SELECT COUNT(*)
+		INTO v_count
+		FROM Client
+		WHERE courriel = p_courriel;
+
+		IF v_count = 0 THEN
+			-- Email does not exist
+			p_resultat := 'Adresse courriel inconnue.';
+			RETURN;
+		END IF;
+
+		-- Check if the password matches the email
+		SELECT COUNT(*)
+		INTO v_correctPassword
+		FROM Client
+		WHERE courriel = p_courriel AND motDePasse = p_motDePasse;
+
+		IF v_correctPassword = 0 THEN
+			-- Password is incorrect
+			p_resultat := 'Mot de passe incorrect.';
+		ELSE
+			-- Successful login
+			p_resultat := 'Connexion réussie.';
+		END IF;
+	EXCEPTION
+		WHEN OTHERS THEN
+			p_resultat := 'Erreur inattendue lors de la connexion.';
+	END;
+
+TEST #1 (Valide email et mdp):
+	DECLARE
+		v_resultat VARCHAR2(100);
+	BEGIN
+		p_connexionClient(
+			'john.doe@example.com',  -- À remplacer avec un email valide
+			'Anonim',              -- À remplacer avec un mdp valide
+			v_resultat
+		);
+		DBMS_OUTPUT.PUT_LINE(v_resultat);
+	END;
+
+
+Expected Result: Connexion réussie.
+
+
+TEST #2 (Email Invalide):
+DECLARE
+    v_resultat VARCHAR2(100);
+BEGIN
+    p_connexionClient(
+        'unknown.email@example.com', -- Email non-existant
+        'passw0rd',
+        v_resultat
+    );
+    DBMS_OUTPUT.PUT_LINE(v_resultat);
+END;
+
+
+Expected Result: Adresse courriel inconnue.
+
+
+TEST #3 (MDP Invalide):
+DECLARE
+    v_resultat VARCHAR2(100);
+BEGIN
+    p_connexionClient(
+        'john.doe@example.com',  -- À remplacer avec un email valide
+        'wrongpassword',         -- MDP Incorrecte
+        v_resultat
+    );
+    DBMS_OUTPUT.PUT_LINE(v_resultat);
+END;
+
+
+Expected Result: Mot de passe incorrect.
+
+
+ALTER TABLE Client
+ADD CONSTRAINT unique_email UNIQUE (courriel);
+
+
+ALTER TABLE Client
+MODIFY (courriel NOT NULL, motDePasse NOT NULL);
+
+
+Script complète:
+
+	-- Add constraints for data consistency
+	ALTER TABLE Client
+	ADD CONSTRAINT unique_email UNIQUE (courriel);
+
+	ALTER TABLE Client
+	MODIFY (courriel NOT NULL, motDePasse NOT NULL);
+
+	-- Create the stored procedure for client login
+	CREATE OR REPLACE PROCEDURE p_connexionClient(
+		p_courriel     IN VARCHAR2,
+		p_motDePasse   IN VARCHAR2,
+		p_resultat     OUT VARCHAR2
+	) AS
+		v_count INTEGER;
+		v_correctPassword INTEGER;
+	BEGIN
+		-- Check if the email exists
+		SELECT COUNT(*)
+		INTO v_count
+		FROM Client
+		WHERE courriel = p_courriel;
+
+		IF v_count = 0 THEN
+			-- Email does not exist
+			p_resultat := 'Adresse courriel inconnue.';
+			RETURN;
+		END IF;
+
+		-- Check if the password matches the email
+		SELECT COUNT(*)
+		INTO v_correctPassword
+		FROM Client
+		WHERE courriel = p_courriel AND motDePasse = p_motDePasse;
+
+		IF v_correctPassword = 0 THEN
+			-- Password is incorrect
+			p_resultat := 'Mot de passe incorrect.';
+		ELSE
+			-- Successful login
+			p_resultat := 'Connexion réussie.';
+		END IF;
+	EXCEPTION
+		WHEN OTHERS THEN
+			p_resultat := 'Erreur inattendue lors de la connexion.';
+	END;

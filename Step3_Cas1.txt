@@ -1,0 +1,161 @@
+Abonement en ligne:
+
+Règle 1 : L'adresse e-mail doit être unique.
+Règle 2 : La date d'expiration de la carte de crédit doit être dans le futur.
+Règle 3 : Le client doit avoir au moins 18 ans.
+Règle 4 : Le mot de passe doit contenir au moins 5 caractères alphanumériques.
+Règle 5 : Tous les champs obligatoires (par exemple, nom, e-mail, mot de passe) ne doivent pas être vides.
+
+1. Unique emails:
+
+	ALTER TABLE Client
+	ADD CONSTRAINT unique_email UNIQUE (courriel);
+
+2. Date expiration valide CC:
+	ALTER TABLE CarteCredit
+	ADD CONSTRAINT check_expiration_date
+	CHECK (dateExpiration > SYSDATE);
+
+3. Valider format MDP (Regex):
+	ALTER TABLE Client
+	ADD CONSTRAINT check_password_format
+	CHECK (REGEXP_LIKE(motDePasse, '^[[:alnum:]]{5,}$'));
+----------------------------------------------------------------------------------
+Explication de l'expression régulière :
+^ : indique le début de la chaîne.
+[[:alnum:]] : correspond à n'importe quel caractère alphanumérique (lettres et chiffres).
+{5,} : spécifie que le motif précédent ([[:alnum:]]) doit apparaître au moins 5 fois.
+$ : indique la fin de la chaîne.
+Ainsi, cette expression régulière garantit que motDePasse :
+contient uniquement des caractères alphanumériques (aucun caractère spécial).
+comporte au moins 5 caractères.
+----------------------------------------------------------------------------------
+
+4. Valider les champs non nulls:
+	ALTER TABLE Client
+	MODIFY (nom NOT NULL, prenom NOT NULL, courriel NOT NULL, motDePasse NOT NULL);
+
+5. Tigger pour verifier age minimale de 18 ans:
+	CREATE OR REPLACE TRIGGER trg_validate_age
+	BEFORE INSERT ON Client
+	FOR EACH ROW
+	DECLARE
+		v_age NUMBER;
+	BEGIN
+		-- Calculate age
+		SELECT FLOOR(MONTHS_BETWEEN(SYSDATE, :NEW.dateNaissance) / 12)
+		INTO v_age
+		FROM Client; -- pas sur quelle table MAYBE DUAL
+
+		IF v_age < 18 THEN
+			RAISE_APPLICATION_ERROR(-20001, 'Le client doit avoir au moins 18 ans.');
+		END IF;
+	END;
+	
+
+6. SP Ajout d'un client:
+	CREATE OR REPLACE PROCEDURE p_ajouterClient(
+		p_nomUsager    IN VARCHAR2,
+		p_motDePasse   IN VARCHAR2,
+		p_nom          IN VARCHAR2,
+		p_prenom       IN VARCHAR2,
+		p_dateNaiss    IN DATE,
+		p_numeroTel    IN VARCHAR2,
+		p_adresse      IN VARCHAR2,
+		p_courriel     IN VARCHAR2,
+		p_codeCarte    IN VARCHAR2,
+		p_dateExpCarte IN DATE,
+		p_codeAbn      IN CHAR
+	) AS
+		v_age NUMBER;
+	BEGIN
+		-- Calculate the client's age
+		SELECT FLOOR(MONTHS_BETWEEN(SYSDATE, p_dateNaiss) / 12)
+		INTO v_age
+		FROM Client; --Is it Client?? MAYBE DUAL
+
+		-- Check if the client is at least 18 years old
+		IF v_age < 18 THEN
+			RAISE_APPLICATION_ERROR(-20001, 'Le client doit avoir au moins 18 ans.');
+		END IF;
+
+		-- Insert the client's information
+		INSERT INTO Client (nomUsager, motDePasse, nom, prenom, dateNaissance, numeroTelephone, adresse, courriel, codeAbonnement)
+		VALUES (p_nomUsager, p_motDePasse, p_nom, p_prenom, p_dateNaiss, p_numeroTel, p_adresse, p_courriel, p_codeAbn);
+
+		-- Insert the credit card details
+		INSERT INTO CarteCredit (codeCarte, dateExpiration, courrielClient)
+		VALUES (p_codeCarte, p_dateExpCarte, p_courriel);
+
+		COMMIT;
+	EXCEPTION
+		WHEN DUP_VAL_ON_INDEX THEN
+			RAISE_APPLICATION_ERROR(-20002, 'Adresse courriel déjà utilisée.');
+		WHEN OTHERS THEN
+			ROLLBACK;
+			RAISE;
+	END;
+	
+
+TEST #1 (Ajout Client Valide):
+	BEGIN
+		p_ajouterClient(
+			'usager123', 
+			'passw0rd', 
+			'Doe', 
+			'John', 
+			DATE '1990-01-01', 
+			'5145551234', 
+			'123 rue Example', 
+			'john.doe@example.com', 
+			'VISA123456789', 
+			DATE '2026-12-31', 
+			'D'
+		);
+	END;
+
+
+Expected Result: The client is successfully added.
+
+
+TEST #2 (Age PP QUE 18):
+	BEGIN
+		p_ajouterClient(
+			'usager456', 
+			'securepass', 
+			'Smith', 
+			'Jane', 
+			DATE '2010-01-01', 
+			'5145556789', 
+			'456 rue Example', 
+			'jane.smith@example.com', 
+			'VISA987654321', 
+			DATE '2026-12-31', 
+			'I'
+		);
+	END;
+
+
+Expected Result: Error: Le client doit avoir au moins 18 ans.
+
+
+TEST #3 (Duplicate Email):
+	BEGIN
+		p_ajouterClient(
+			'usager123', 
+			'newpassword', 
+			'Dupont', 
+			'Alice', 
+			DATE '1995-05-15', 
+			'5145559999', 
+			'789 rue Example', 
+			'john.doe@example.com', 
+			'VISA1122334455', 
+			DATE '2026-12-31', 
+			'A'
+		);
+	END;
+
+
+Expected Result: Error: Adresse courriel déjà utilisée.
+
