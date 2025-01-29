@@ -1,71 +1,71 @@
-Location de films:
+Emprunt de films:
 
 Règles de validation :
 Il doit y avoir au moins une copie disponible du film sélectionné dans l'inventaire
-Le client ne doit pas dépasser la limite de location spécifiée par son plan d'abonnement
-Chaque location doit mettre à jour l'inventaire pour refléter la copie louée
+Le client ne doit pas dépasser la limite de Emprunt spécifiée par son plan d'abonnement
+Chaque Emprunt doit mettre à jour l'inventaire pour refléter la copie prêtée
 Comportement attendu:
 Si les conditions ci-dessus ne sont pas remplies, le système doit afficher un message d'erreur significatif
-Si la location réussit:
+Si la Emprunt réussit:
 Une copie du film est envoyée au client
 L'inventaire est mis à jour
 
 1. SP Louer un film:
 CREATE OR REPLACE PROCEDURE p_louerFilm(
-    p_idClient      IN NUMBER,
-    p_idFilm        IN NUMBER,
+    p_nomUsager      IN NUMBER,
+    p_filmId        IN NUMBER,
     p_resultat      OUT VARCHAR2
 ) AS
     v_copiesDispo   NUMBER;
-    v_nbLocations   NUMBER;
-    v_maxLocations  NUMBER;
-    v_idExemplaire  NUMBER;
+    v_nbEmprunts   NUMBER;
+    v_maxEmprunts  NUMBER;
+    v_copieId  NUMBER;
 BEGIN
     -- Step 1: Check if there are available copies of the movie
-    SELECT idExemplaire
-    INTO v_idExemplaire
-    FROM ExemplaireFilm
-    WHERE idFilm = p_idFilm AND statutExemplaire = 'disponible'
+    SELECT copieId
+    INTO v_copieId
+    FROM CopieFilm
+    WHERE filmId = p_filmId AND statut = 'disponible'
     FETCH FIRST 1 ROWS ONLY;
 
     -- Step 2: Check the number of active rentals for the client
     SELECT COUNT(*)
-    INTO v_nbLocations
-    FROM Location
-    WHERE idClient = p_idClient AND statutLocation = 'en_cours';
+    INTO v_nbEmprunts
+    FROM Emprunt
+    WHERE nomUsager = p_nomUsager AND statut = 'prêté';
 
     -- Step 3: Get the rental limit for the client's subscription plan
-    SELECT locationMax
-    INTO v_maxLocations
+    SELECT EmpruntMax
+    INTO v_maxEmprunts
     FROM Abonnement
-    WHERE codeAbonnement = (SELECT codeAbonnement FROM Client WHERE idClient = p_idClient);
+    WHERE codeAbonnement = (SELECT codeAbonnement FROM Client WHERE nomUsager = p_nomUsager);
 
     -- Step 4: Validate the client's rental limit
-    IF v_nbLocations >= v_maxLocations THEN
-        p_resultat := 'Limite de location atteinte pour ce client.';
+    IF v_nbEmprunts >= v_maxEmprunts THEN
+        p_resultat := 'Limite de Emprunt atteinte pour ce client.';
         RETURN;
     END IF;
 
     -- Step 5: Update inventory and record the rental
-    UPDATE ExemplaireFilm
-    SET statutExemplaire = 'loué'
-    WHERE idExemplaire = v_idExemplaire;
+    UPDATE CopieFilm
+    SET statut = 'prêté'
+    WHERE copieId = v_copieId;
 
-    INSERT INTO Location (idClient, idExemplaire, dateLocation, statutLocation)
-    VALUES (p_idClient, v_idExemplaire, SYSDATE, 'en_cours');
+    INSERT INTO Emprunt (nomUsager, copieId, dateDebutEmprunt, statut)
+    VALUES (p_nomUsager, v_copieId, SYSDATE, 'prêté');
 
-    p_resultat := 'Location réussie. Copie envoyée.';
+    p_resultat := 'Emprunt réussie. Copie envoyée.';
     COMMIT;
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
         p_resultat := 'Aucune copie disponible pour ce film.';
     WHEN OTHERS THEN
         ROLLBACK;
-        p_resultat := 'Erreur inattendue lors de la location.';
+        p_resultat := 'Erreur inattendue lors de la Emprunt.';
 END;
 
 
-TEST #1 (Location Succes):
+TEST #1 (Emprunt Succes):
 DECLARE
     v_resultat VARCHAR2(100);
 BEGIN
@@ -74,7 +74,7 @@ BEGIN
 END;
 
 
-Expected Result: Location réussie. Copie envoyée.
+Expected Result: Emprunt réussie. Copie envoyée.
 
 
 TEST #2 (Pas de copies disponible):
@@ -98,69 +98,69 @@ BEGIN
 END;
 
 
-Expected Result: Limite de location atteinte pour ce client.
+Expected Result: Limite de Emprunt atteinte pour ce client.
 
 
 FULL SCRIPT:
 
 -- Constraints
-ALTER TABLE ExemplaireFilm
-ADD CONSTRAINT fk_exemplaire_film FOREIGN KEY (idFilm) REFERENCES Film(idFilm);
+ALTER TABLE CopieFilm
+ADD CONSTRAINT fk_exemplaire_film FOREIGN KEY (filmId) REFERENCES Film(filmId);
 
-ALTER TABLE Location
-ADD CONSTRAINT fk_location_client FOREIGN KEY (idClient) REFERENCES Client(idClient);
+ALTER TABLE Emprunt
+ADD CONSTRAINT fk_Emprunt_client FOREIGN KEY (nomUsager) REFERENCES Client(nomUsager);
 
-ALTER TABLE ExemplaireFilm
-ADD CONSTRAINT chk_statutExemplaire CHECK (statutExemplaire IN ('disponible', 'loué'));
+ALTER TABLE CopieFilm
+ADD CONSTRAINT chk_statut CHECK (statut IN ('disponible', 'prêté'));
 
-ALTER TABLE Location
-ADD CONSTRAINT chk_statutLocation CHECK (statutLocation IN ('en_cours', 'terminée'));
+ALTER TABLE Emprunt
+ADD CONSTRAINT chk_statut CHECK (statut IN ('prêté', 'terminée'));
 
 -- Stored Procedure
 CREATE OR REPLACE PROCEDURE p_louerFilm(
-    p_idClient      IN NUMBER,
-    p_idFilm        IN NUMBER,
+    p_nomUsager      IN NUMBER,
+    p_filmId        IN NUMBER,
     p_resultat      OUT VARCHAR2
 ) AS
     v_copiesDispo   NUMBER;
-    v_nbLocations   NUMBER;
-    v_maxLocations  NUMBER;
-    v_idExemplaire  NUMBER;
+    v_nbEmprunts   NUMBER;
+    v_maxEmprunts  NUMBER;
+    v_copieId  NUMBER;
 BEGIN
-    SELECT idExemplaire
-    INTO v_idExemplaire
-    FROM ExemplaireFilm
-    WHERE idFilm = p_idFilm AND statutExemplaire = 'disponible'
+    SELECT copieId
+    INTO v_copieId
+    FROM CopieFilm
+    WHERE filmId = p_filmId AND statut = 'disponible'
     FETCH FIRST 1 ROWS ONLY;
 
     SELECT COUNT(*)
-    INTO v_nbLocations
-    FROM Location
-    WHERE idClient = p_idClient AND statutLocation = 'en_cours';
+    INTO v_nbEmprunts
+    FROM Emprunt
+    WHERE nomUsager = p_nomUsager AND statut = 'prêté';
 
-    SELECT locationMax
-    INTO v_maxLocations
+    SELECT EmpruntMax
+    INTO v_maxEmprunts
     FROM Abonnement
-    WHERE codeAbonnement = (SELECT codeAbonnement FROM Client WHERE idClient = p_idClient);
+    WHERE codeAbonnement = (SELECT codeAbonnement FROM Client WHERE nomUsager = p_nomUsager);
 
-    IF v_nbLocations >= v_maxLocations THEN
-        p_resultat := 'Limite de location atteinte pour ce client.';
+    IF v_nbEmprunts >= v_maxEmprunts THEN
+        p_resultat := 'Limite de Emprunt atteinte pour ce client.';
         RETURN;
     END IF;
 
-    UPDATE ExemplaireFilm
-    SET statutExemplaire = 'loué'
-    WHERE idExemplaire = v_idExemplaire;
+    UPDATE CopieFilm
+    SET statut = 'prêté'
+    WHERE copieId = v_copieId;
 
-    INSERT INTO Location (idClient, idExemplaire, dateLocation, statutLocation)
-    VALUES (p_idClient, v_idExemplaire, SYSDATE, 'en_cours');
+    INSERT INTO Emprunt (nomUsager, copieId, dateDebutEmprunt, statut)
+    VALUES (p_nomUsager, v_copieId, SYSDATE, 'prêté');
 
-    p_resultat := 'Location réussie. Copie envoyée.';
+    p_resultat := 'Emprunt réussie. Copie envoyée.';
     COMMIT;
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
         p_resultat := 'Aucune copie disponible pour ce film.';
     WHEN OTHERS THEN
         ROLLBACK;
-        p_resultat := 'Erreur inattendue lors de la location.';
+        p_resultat := 'Erreur inattendue lors de la Emprunt.';
 END;

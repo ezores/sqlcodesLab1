@@ -27,9 +27,9 @@ Titre, année, pays, langue, durée, genres, réalisateur, scénaristes, acteurs
 		p_anneeMax       IN NUMBER DEFAULT NULL,
 		p_nomPays        IN VARCHAR2 DEFAULT NULL,
 		p_langue         IN VARCHAR2 DEFAULT NULL,
-		p_nomGenre       IN VARCHAR2 DEFAULT NULL,
-		p_nomRealisateur IN VARCHAR2 DEFAULT NULL,
-		p_nomActeur      IN VARCHAR2 DEFAULT NULL,
+		p_nom       IN VARCHAR2 DEFAULT NULL,
+		p_nom IN VARCHAR2 DEFAULT NULL,
+		p_nom      IN VARCHAR2 DEFAULT NULL,
 		p_result         OUT SYS_REFCURSOR
 	) AS
 	BEGIN
@@ -38,22 +38,21 @@ Titre, année, pays, langue, durée, genres, réalisateur, scénaristes, acteurs
 			   f.titre,
 			   f.anneeSortie
 		FROM   Film f
-			   LEFT JOIN FilmPays fp ON f.idFilm = fp.idFilm
-			   LEFT JOIN Pays p ON fp.idPays = p.idPays
-			   LEFT JOIN FilmGenre fg ON f.idFilm = fg.idFilm
-			   LEFT JOIN Genre g ON fg.idGenre = g.idGenre
-			   LEFT JOIN FilmRealisateur fr ON f.idFilm = fr.idFilm
-			   LEFT JOIN Realisateur r ON fr.idRealisateur = r.idRealisateur
-			   LEFT JOIN FilmActeur fa ON f.idFilm = fa.idFilm
-			   LEFT JOIN Acteur a ON fa.idActeur = a.idActeur
+			   LEFT JOIN FilmPays fp ON f.FilmId = fp.FilmId
+			   LEFT JOIN Pays p ON fp.PaysId = p.PaysId
+			   LEFT JOIN GenreFilm fg ON f.FilmId = fg.FilmId
+			   LEFT JOIN Genre g ON fg.GenreId = g.GenreId
+			   LEFT JOIN Realisateur r ON f.RealisateurId = r.RealisateurId
+			   LEFT JOIN ActeurFilm fa ON f.FilmId = fa.FilmId
+			   LEFT JOIN Acteur a ON fa.ActeurId = a.ActeurId
 		WHERE  (p_titre IS NULL OR LOWER(f.titre) LIKE '%' || LOWER(p_titre) || '%')
 		   AND (p_anneeMin IS NULL OR f.anneeSortie >= p_anneeMin)
 		   AND (p_anneeMax IS NULL OR f.anneeSortie <= p_anneeMax)
 		   AND (p_nomPays IS NULL OR LOWER(p.nomPays) = LOWER(p_nomPays))
 		   AND (p_langue IS NULL OR LOWER(f.langueOriginale) = LOWER(p_langue))
-		   AND (p_nomGenre IS NULL OR LOWER(g.nomGenre) = LOWER(p_nomGenre))
-		   AND (p_nomRealisateur IS NULL OR LOWER(r.nomRealisateur) LIKE '%' || LOWER(p_nomRealisateur) || '%')
-		   AND (p_nomActeur IS NULL OR LOWER(a.nomActeur) LIKE '%' || LOWER(p_nomActeur) || '%');
+		   AND (p_nom IS NULL OR LOWER(g.nom) = LOWER(p_nom))
+		   AND (p_nom IS NULL OR LOWER(r.nom) LIKE '%' || LOWER(p_nom) || '%')
+		   AND (p_nom IS NULL OR LOWER(a.nom) LIKE '%' || LOWER(p_nom) || '%');
 	END;
 	
 TEST #1 (Film):
@@ -81,7 +80,7 @@ Expected Result: Liste de films entre 1995 et 2000
 TEST #3 (PAYS ET GENRE):
 	VARIABLE rc REFCURSOR;
 	BEGIN
-		p_rechercheFilms(p_nomPays => 'Turkey', p_nomGenre => 'Action', p_result => :rc);
+		p_rechercheFilms(p_nomPays => 'Turkey', p_nom => 'Action', p_result => :rc);
 	END;
 	PRINT rc;
 
@@ -100,9 +99,9 @@ To improve query performance, add indexes on frequently searched columns:
 CREATE INDEX idx_titre ON Film(titre);
 CREATE INDEX idx_anneeSortie ON Film(anneeSortie);
 CREATE INDEX idx_nomPays ON Pays(nomPays);
-CREATE INDEX idx_nomGenre ON Genre(nomGenre);
-CREATE INDEX idx_nomRealisateur ON Realisateur(nomRealisateur);
-CREATE INDEX idx_nomActeur ON Acteur(nomActeur);
+CREATE INDEX idx_nom ON Genre(nom);
+CREATE INDEX idx_nom ON Realisateur(nom);
+CREATE INDEX idx_nom ON Acteur(nom);
 
 To display detailed movie information, use a query like this:
 SELECT f.titre,
@@ -110,17 +109,17 @@ SELECT f.titre,
        LISTAGG(p.nomPays, ', ') WITHIN GROUP (ORDER BY p.nomPays) AS pays,
        f.langueOriginale,
        f.resume,
-       LISTAGG(g.nomGenre, ', ') WITHIN GROUP (ORDER BY g.nomGenre) AS genres,
-       r.nomRealisateur,
-       LISTAGG(a.nomActeur || ' as ' || fa.roleActeur, ', ') WITHIN GROUP (ORDER BY a.nomActeur) AS acteurs
+       LISTAGG(g.nom, ', ') WITHIN GROUP (ORDER BY g.nom) AS genres,
+       r.nom,
+       LISTAGG(a.nom || ' as ' || fa.roleActeur, ', ') WITHIN GROUP (ORDER BY a.nom) AS acteurs
 FROM   Film f
-       LEFT JOIN FilmPays fp ON f.idFilm = fp.idFilm
-       LEFT JOIN Pays p ON fp.idPays = p.idPays
-       LEFT JOIN FilmGenre fg ON f.idFilm = fg.idFilm
-       LEFT JOIN Genre g ON fg.idGenre = g.idGenre
-       LEFT JOIN FilmRealisateur fr ON f.idFilm = fr.idFilm
-       LEFT JOIN Realisateur r ON fr.idRealisateur = r.idRealisateur
-       LEFT JOIN FilmActeur fa ON f.idFilm = fa.idFilm
-       LEFT JOIN Acteur a ON fa.idActeur = a.idActeur
-WHERE  f.idFilm = :idFilm
-GROUP BY f.titre, f.anneeSortie, f.langueOriginale, f.resume, r.nomRealisateur;
+       LEFT JOIN FilmPays fp ON f.FilmId = fp.FilmId
+       LEFT JOIN Pays p ON fp.PaysId = p.PaysId
+       LEFT JOIN GenreFilm fg ON f.FilmId = fg.FilmId
+       LEFT JOIN Genre g ON fg.GenreId = g.GenreId
+       LEFT JOIN FilmRealisateur fr ON f.FilmId = fr.FilmId
+       LEFT JOIN Realisateur r ON fr.RealisateurId = r.RealisateurId
+       LEFT JOIN ActeurFilm fa ON f.FilmId = fa.FilmId
+       LEFT JOIN Acteur a ON fa.ActeurId = a.ActeurId
+WHERE  f.FilmId = :FilmId
+GROUP BY f.titre, f.anneeSortie, f.langueOriginale, f.resume, r.nom;
