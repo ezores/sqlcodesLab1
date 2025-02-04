@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '7.1.2' // Shadow Plugin for Fat JAR
+}
+
+group = 'log.laboratoire'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    // JAXB Dependencies
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.3'
+
+    // Oracle JDBC Driver
+    implementation files('libs/ojdbc17.jar')
+}
+
+application {
+    mainClass = 'log.laboratoire.App'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'log.laboratoire.App'
+        )
+    }
+}
+
+shadowJar {
+    archiveClassifier.set('') // Removes '-all' suffix, making this the default JAR
+}
+
+test {
+    useJUnitPlatform()
+}
