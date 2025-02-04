@@ -108,7 +108,6 @@ CREATE TABLE Abonnement (
 	coutMensuel BINARY_FLOAT,
 	empruntMax INTEGER,
 	dureeMax INTEGER,
-	codeAbonnement CHAR(10),
 	PRIMARY KEY(code)
 );
 
