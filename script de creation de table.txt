@@ -40,7 +40,6 @@ CREATE TABLE Adresse (
 	ville VARCHAR2(255),
 	province VARCHAR2(255),
 	codePostal CHAR(7)
-	paysId INTEGER,
 	PRIMARY KEY(adresseId)
 );
 
