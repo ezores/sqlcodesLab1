@@ -125,7 +125,6 @@ CREATE TABLE Film (
 	dureeMinute INTEGER,
 	resume VARCHAR2(2083),
 	afficheUrl VARCHAR2(2083),
-	bandeAnnonceUrl VARCHAR2(2083),
 	realisateurId INTEGER,
 	PRIMARY KEY(filmId)
 );
