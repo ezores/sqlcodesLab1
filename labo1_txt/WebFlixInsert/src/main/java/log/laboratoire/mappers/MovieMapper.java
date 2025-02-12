@@ -6,6 +6,7 @@ import log.laboratoire.entity.movieEntities.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MovieMapper {
     private static int countryIdCounter = 1;
@@ -100,7 +101,10 @@ public class MovieMapper {
     private static void setCopies(Movie movie) {
         List<MovieCopy> copies = new ArrayList<>();
 
-        for(int i = 0; i < 2; i++) {
+        Random random = new Random();
+        int randomNumber = random.nextInt(100) + 1;
+
+        for(int i = 0; i < randomNumber; i++) {
             copies.add(new MovieCopy(getNextMovieCopyId(), movie.getId()));
         }
 
