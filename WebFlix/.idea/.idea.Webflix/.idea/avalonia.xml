@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Webflix/App.axaml" value="Webflix/Webflix.csproj" />
+        <entry key="Webflix/Views/MainWindow.axaml" value="Webflix/Webflix.csproj" />
+        <entry key="Webflix/Views/MovieGridView.axaml" value="Webflix/Webflix.csproj" />
+        <entry key="Webflix/Views/MovieThumbnailView.axaml" value="Webflix/Webflix.csproj" />
+        <entry key="Webflix/Views/MovieTileView.axaml" value="Webflix/Webflix.csproj" />
+        <entry key="Webflix/Views/SearchView.axaml" value="Webflix/Webflix.csproj" />
+        <entry key="Webflix/Views/SerchView.axaml" value="Webflix/Webflix.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

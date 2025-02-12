@@ -1,0 +1,129 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Webflix.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:regions="http://prismlibrary.com/"
+        mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+        x:Class="Webflix.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/w.ico"
+        Title="Webflix"
+        Background="Black">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="1.5*, 7.5*, 1*" ColumnDefinitions="4*,3*,4*">
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="80"
+                   Foreground="#e50914"
+                   FontWeight="ExtraBlack"
+                   LetterSpacing="1.8"
+                   Text="{Binding ApplicationTile}"/>
+        
+        <Button Grid.Row="0"
+                Grid.Column="2"
+                Background="Transparent"
+                CornerRadius="100"
+                Height="60"
+                Width="60"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                Margin="20,0"
+                IsVisible="{Binding IsLogoutVisible}">
+            <Viewbox>
+                <Image Source="../Assets/logout.png"/>
+            </Viewbox>
+        </Button>
+        
+        <Border Grid.Row="1"
+                Grid.Column="1"
+                Background="#262626"
+                CornerRadius="10"
+                Margin="50,50">
+            <Grid HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  RowDefinitions="1*,8*, 1*"
+                  ColumnDefinitions="1.5*,7*,1.5*">
+                <StackPanel HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Orientation="Vertical"
+                            Spacing="50"
+                            Margin="10,0">
+                    <TextBlock VerticalAlignment="Center"
+                               HorizontalAlignment="Left"
+                               FontSize="40"
+                               Margin="0,0,0,20"
+                               FontWeight="DemiBold"
+                               Text="{Binding SignIn}"/>
+                    <TextBox Background="#000438"
+                               FontSize="16"
+                               Foreground="White"
+                               BorderThickness="2"
+                               BorderBrush="#5a5b6b"
+                               LetterSpacing="0.5"
+                               Watermark="{Binding Email}"
+                               LineHeight="30"
+                               Height="60"
+                               CornerRadius="8"
+                               VerticalContentAlignment="Center"
+                               Text="{Binding UserNameTextBox, Mode=OneWayToSource}"/>
+                    <TextBox Background="#000438"
+                             FontSize="16"
+                             Foreground="White"
+                             BorderThickness="2"
+                             BorderBrush="#5a5b6b"
+                             LetterSpacing="0.5"
+                             Watermark="{Binding Password}"
+                             PasswordChar="*"
+                             LineHeight="30"
+                             Height="60"
+                             CornerRadius="8"
+                             VerticalContentAlignment="Center"
+                             Text="{Binding PasswordTextBox, Mode=OneWayToSource}"/>
+                    
+                    <Button HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Background="#c11119"
+                            Height="45"
+                            Content="{Binding SignIn}"
+                            CornerRadius="8"
+                            Command="{Binding SignInCommand}"/>
+                    
+                    <Border VerticalAlignment="Center"
+                            HorizontalAlignment="Stretch"
+                            Background="Transparent"
+                            BorderBrush="Red"
+                            BorderThickness="2"
+                            CornerRadius="8"
+                            Margin="20,0"
+                            Padding="10"
+                            IsVisible="{Binding IsErrorMessageVisible}">
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   IsVisible="{Binding IsErrorMessageVisible}"/>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+        
+        <ContentControl Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.RowSpan="2"
+                        Grid.ColumnSpan="3"
+                        regions:RegionManager.RegionName="main-region" Margin="10,0,10,0"/>
+    </Grid>
+
+</Window>
