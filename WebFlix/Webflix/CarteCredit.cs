@@ -2,8 +2,8 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("CARTECREDIT_BACKUP")]
-public class CarteCreditBackup
+[Table("CARTECREDIT")]
+public class CarteCredit
 {
     [Key]
     [Column("CARTECREDITID")]

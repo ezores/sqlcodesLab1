@@ -33,11 +33,11 @@ class Program
         {
             try
             {
-                var cartes = context.CartesCreditBackup.ToList();
+                var cartes = context.CartesCredit.ToList();
 
                 if (!cartes.Any())
                 {
-                    Console.WriteLine("No records found in CARTECREDIT_BACKUP.");
+                    Console.WriteLine("No records found in CARTECREDIT.");
                 }
                 else
                 {
