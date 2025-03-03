@@ -7,21 +7,25 @@
              x:DataType="vm:MovieTileViewModel"
              x:Class="Webflix.Views.MovieTileView">
     
-    <Grid HorizontalAlignment="Stretch"
-          VerticalAlignment="Stretch"
-          RowDefinitions="7*,3*"
-          ColumnDefinitions="1*,8*,1*">
-        
-        <Image Grid.Row="0"
-               Grid.Column="1"
-               Margin="0,15"
-               Source="/Assets/spiderman.jpg"
-               Height="200"/>
-        <TextBlock Grid.Row="1"
+    <Button Command="{Binding OpenMovieDetailsCommand}"
+            Background="Transparent"
+            BorderThickness="0">
+        <Grid HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              RowDefinitions="7*,3*"
+              ColumnDefinitions="1*,8*,1*">
+            
+            <Image Grid.Row="0"
                    Grid.Column="1"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontSize="25"
-                   Text="Spider-Man"/>
-    </Grid>
+                   Margin="0,15"
+                   Source="/Assets/spiderman.jpg"
+                   Height="200"/>
+            <TextBlock Grid.Row="1"
+                       Grid.Column="1"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="25"
+                       Text="Spider-Man"/>
+        </Grid>
+    </Button>
 </UserControl>

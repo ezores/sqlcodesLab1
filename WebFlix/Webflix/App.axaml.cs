@@ -24,6 +24,7 @@ public partial class App : PrismApplication
         
         containerRegistry.RegisterForNavigation<SearchView, SearchViewModel>();
         containerRegistry.RegisterForNavigation<MovieGridView, MovieGridViewModel>();
+        containerRegistry.RegisterForNavigation<MovieDetailsView, MovieDetailsViewModel>();
     }
     
     protected override AvaloniaObject CreateShell() => Container.Resolve<MainWindow>();

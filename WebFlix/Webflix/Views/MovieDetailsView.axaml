@@ -1,0 +1,41 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Webflix.Views.MovieDetailsView"
+             xmlns:vm="clr-namespace:Webflix.ViewModels"
+             x:DataType="vm:MovieDetailsViewModel">
+    
+    <Grid Background="#262626" ColumnDefinitions="1*,2*">
+        <!-- Go Back Button -->
+        <Button Background="Black"
+                Height="65"
+                Width="65"
+                Content="←"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                Margin="15,15,0,0"
+                FontSize="35"
+                FontWeight="Black"
+                CornerRadius="100"
+                Command="{Binding GoBackCommand}"/>
+                    
+        <!-- Movie Image (directly below title) -->
+        <Image Source="{Binding AfficheURL}"
+               Height="300"
+               Grid.Column="0"
+               Margin="0,10,0,0"/>
+        <TextBlock Text="{Binding TitreText}"
+                   FontSize="30"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   Grid.Column="0"
+                   TextAlignment="Center"/>
+        <TextBlock Text="{Binding Titre}"
+                   FontSize="30"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   Grid.Column="1"
+                   TextAlignment="Center"/>
+    </Grid>
+</UserControl>

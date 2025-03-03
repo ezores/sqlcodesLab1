@@ -29,4 +29,10 @@
         <PackageReference Include="Prism.Avalonia" Version="8.1.97.11073" />
         <PackageReference Include="Prism.DryIoc.Avalonia" Version="8.1.97.11073" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\MovieDetailsView.cs">
+        <DependentUpon>MovieDetailsView.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>

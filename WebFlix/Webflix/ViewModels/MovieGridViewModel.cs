@@ -6,6 +6,8 @@ namespace Webflix.ViewModels;
 
 public class MovieGridViewModel : ViewModelBase
 {
+    private readonly IRegionManager _regionManager;
+    
     private MovieTileViewModel? _selectedAlbum;
 
     public ObservableCollection<MovieTileViewModel> SearchResults { get; } = new();
@@ -16,24 +18,13 @@ public class MovieGridViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _selectedAlbum, value);
     }
 
-    public MovieGridViewModel()
+    public MovieGridViewModel(IRegionManager regionManager)
     {
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
-        SearchResults.Add(new MovieTileViewModel());
+        _regionManager = regionManager;
+        
+        for (int i = 0; i < 10; i++)
+        {
+            SearchResults.Add(new MovieTileViewModel(_regionManager));
+        }
     }
 }
