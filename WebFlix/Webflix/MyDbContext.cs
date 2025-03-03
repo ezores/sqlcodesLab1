@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 public class MyDbContext : DbContext
 {
-    public DbSet<CarteCreditBackup> CartesCreditBackup { get; set; }
+    public DbSet<CarteCredit> CartesCredit { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
