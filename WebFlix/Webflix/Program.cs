@@ -43,7 +43,7 @@ class Program
                 {
                     foreach (var carte in cartes)
                     {
-                        Console.WriteLine($"ID: {carte.Id}, Numéro: {carte.Numero}, Expiration: {carte.DateExpiration.ToShortDateString()}, CVV: {carte.CVV}, Type: {carte.TypeCarte}");
+                        Console.WriteLine($"ID: {carte.CarteCreditId}, Numéro: {carte.Numero}, Expiration: {carte.DateExpiration.ToShortDateString()}, CVV: {carte.CVV}, Type: {carte.TypeCarte}");
                     }
                 }
             }
