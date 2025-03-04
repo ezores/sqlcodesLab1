@@ -4,6 +4,8 @@ using Avalonia.Markup.Xaml;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Regions;
+using Webflix.Repositories;
+using Webflix.Repositories.Interfaces;
 using Webflix.Resources;
 using Webflix.ViewModels;
 using Webflix.Views;
@@ -21,6 +23,12 @@ public partial class App : PrismApplication
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
         containerRegistry.Register<MainWindow>();
+        
+        // Enregistrer le DbContext
+        containerRegistry.RegisterSingleton<MyDbContext>();
+        
+        // Enregistrer les repositories
+        containerRegistry.RegisterScoped<IFilmRepository, FilmRepository>();
         
         containerRegistry.RegisterForNavigation<SearchView, SearchViewModel>();
         containerRegistry.RegisterForNavigation<MovieGridView, MovieGridViewModel>();

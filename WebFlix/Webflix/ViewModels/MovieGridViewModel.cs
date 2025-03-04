@@ -1,11 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using Prism.Regions;
 using ReactiveUI;
+using Webflix.Repositories.Interfaces;
 
 namespace Webflix.ViewModels;
 
 public class MovieGridViewModel : ViewModelBase
 {
+    private readonly IFilmRepository _filmRepository;
     private MovieTileViewModel? _selectedAlbum;
 
     public ObservableCollection<MovieTileViewModel> SearchResults { get; } = new();
