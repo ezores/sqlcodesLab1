@@ -4,7 +4,7 @@
              xmlns:vm="clr-namespace:Webflix.ViewModels"
              x:DataType="vm:MovieDetailsViewModel">
     
-    <Grid Background="#262626" ColumnDefinitions="1*,2*">
+    <Grid Background="#262626" ColumnDefinitions="1*,2*" Margin="20">
         <!-- Go Back Button -->
         <Button Background="Black"
                 Height="65"
@@ -20,22 +20,67 @@
                 CornerRadius="100"
                 Command="{Binding GoBackCommand}"/>
                     
-        <!-- Movie Image (directly below title) -->
+        <!-- Movie Image in Column 0 -->
         <Image Source="{Binding AfficheURL}"
                Height="300"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Top"
                Grid.Column="0"
                Margin="0,10,0,0"/>
-        <TextBlock Text="{Binding TitreText}"
-                   FontSize="30"
-                   Foreground="White"
-                   HorizontalAlignment="Center"
-                   Grid.Column="0"
-                   TextAlignment="Center"/>
-        <TextBlock Text="{Binding Titre}"
-                   FontSize="30"
-                   Foreground="White"
-                   HorizontalAlignment="Center"
-                   Grid.Column="1"
-                   TextAlignment="Center"/>
+
+        <!-- Movie Details in Column 1 -->
+        <StackPanel Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Margin="20,10,0,0">
+            
+            <TextBlock Text="{Binding TitreText}" FontSize="22" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Text="{Binding Titre}" FontSize="22" Foreground="White" Margin="0,0,0,10"/>
+            
+            <TextBlock Text="{Binding AnneSortieText}" FontSize="18" Foreground="LightGray"/>
+            <TextBlock Text="{Binding AnneSortie}" FontSize="18" Foreground="White" Margin="0,0,0,10"/>
+
+            <TextBlock Text="{Binding PaysText}" FontSize="18" Foreground="LightGray"/>
+            <ItemsControl ItemsSource="{Binding Pays}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="18" Foreground="White"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="{Binding GenresText}" FontSize="18" Foreground="LightGray"/>
+            <ItemsControl ItemsSource="{Binding Genres}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="18" Foreground="White"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="{Binding RealisateurText}" FontSize="18" Foreground="LightGray"/>
+            <TextBlock Text="{Binding Realisateur}" FontSize="18" Foreground="White" Margin="0,0,0,10"/>
+
+            <TextBlock Text="{Binding ScenaristesText}" FontSize="18" Foreground="LightGray"/>
+            <ItemsControl ItemsSource="{Binding Scenaristes}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="18" Foreground="White"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="{Binding ActeursText}" FontSize="18" Foreground="LightGray"/>
+            <ItemsControl ItemsSource="{Binding Acteurs}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="18" Foreground="White"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="{Binding ResumeText}" FontSize="18" Foreground="LightGray"/>
+            <TextBlock Text="{Binding Resume}" FontSize="18" Foreground="White" Margin="0,0,0,10"/>
+        </StackPanel>
     </Grid>
 </UserControl>
