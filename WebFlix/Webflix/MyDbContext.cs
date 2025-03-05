@@ -1,10 +1,14 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Webflix;
 using Webflix.Models;
 
 public class MyDbContext : DbContext
 {
+    public DbSet<Employe> Employes { get; set; }
+    public DbSet<Client> Clients { get; set; }
+
     public DbSet<CarteCredit> CartesCredit { get; set; }
     public DbSet<CopieFilm> CopiesFilm { get; set; }
     public DbSet<Film> Films { get; set; }
@@ -13,7 +17,15 @@ public class MyDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseOracle("User Id=EQUIPE201;Password=yy3IR1VP;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=bdlog660.ens.ad.etsmtl.ca)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCLPDB.ens.ad.etsmtl.ca)))");
+        optionsBuilder.UseOracle("User Id=EQUIPE201;Password=yy3IR1VP;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=bdlog660.ens.ad.etsmtl.ca)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCLPDB.ens.ad.etsmtl.ca)))")
+            //.LogTo(Console.WriteLine)
+            .LogTo(
+                message => Console.WriteLine($"EF Core: {message}"),  // Log SQL and parameters
+                new[] { DbLoggerCategory.Database.Command.Name },
+                LogLevel.Debug
+            )
+            .EnableSensitiveDataLogging();
+        
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -49,6 +61,33 @@ public class MyDbContext : DbContext
             .HasMany(f => f.BandesAnnonces)
             .WithOne(ba => ba.Film)
             .HasForeignKey(ba => ba.FilmId);
+        
+        // Configure Client -> Abonnement relationship
+        // Remove the explicit HasPrincipalKey for Abonnement
+        modelBuilder.Entity<Client>()
+            .Property(c => c.CodeAbonnement)
+            .HasConversion(
+                v => v.ToString(),   // Convert from string to CHAR(1)
+                v => v.Length > 0 ? v[0].ToString() : null  // Ensure conversion back to string
+            );
+
+        modelBuilder.Entity<Client>()
+            .HasOne(c => c.Abonnement)
+            .WithMany(a => a.Clients)
+            .HasForeignKey(c => c.CodeAbonnement)
+            .HasPrincipalKey(a => a.Code);
+
+        
+        modelBuilder.Entity<Client>()
+            .Property(c => c.CarteCreditId)
+            .HasConversion<string>();  // Force CarteCreditId to be treated as a string
+
+        // Configure Client -> CarteCredit relationship
+        modelBuilder.Entity<Client>()
+            .HasOne(c => c.CarteCredit)
+            .WithMany(cc => cc.Clients)
+            .HasForeignKey(c => c.CarteCreditId);
+
             
         // Autres configurations de relations...
         

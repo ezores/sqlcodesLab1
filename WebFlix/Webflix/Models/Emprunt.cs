@@ -4,24 +4,24 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Webflix.Models
 {
-    [Table("Emprunt")]
+    [Table("EMPRUNT")]
     public class Emprunt
     {
         [Key]
-        [Column("copieId")]
+        [Column("COPIEID")]
         public int CopieId { get; set; }
         
         [Key]
-        [Column("nomUsager")]
+        [Column("NOMUSAGER")]
         [StringLength(50)]
         public string NomUsager { get; set; }
         
         [Required]
-        [Column("dateDebutEmprunt")]
+        [Column("DATEDEBUTEMPRUNT")]
         public DateTime DateDebutEmprunt { get; set; }
         
         // Navigation property
-        [ForeignKey("CopieId")]
+        [ForeignKey("COPIEID")]
         public virtual CopieFilm Copie { get; set; }
     }
 }

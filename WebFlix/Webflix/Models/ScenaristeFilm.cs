@@ -3,22 +3,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Webflix.Models
 {
-    [Table("ScenaristeFilm")]
+    [Table("SCENARISTEFILM")]
     public class ScenaristeFilm
     {
         [Key]
-        [Column("scenaristeId")]
+        [Column("SCENARISTEID")]
         public int ScenaristeId { get; set; }
         
         [Key]
-        [Column("filmId")]
+        [Column("FILMID")]
         public int FilmId { get; set; }
         
         // Navigation properties
-        [ForeignKey("ScenaristeId")]
+        [ForeignKey("SCENARISTEID")]
         public virtual Scenariste Scenariste { get; set; }
         
-        [ForeignKey("FilmId")]
+        [ForeignKey("FILMID")]
         public virtual Film Film { get; set; }
     }
 }

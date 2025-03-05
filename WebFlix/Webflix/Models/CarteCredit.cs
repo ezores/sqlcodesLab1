@@ -5,28 +5,28 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Webflix.Models
 {
-    [Table("CarteCredit")]
+    [Table("CARTECREDIT")]
     public class CarteCredit
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column("carteCreditId")]
+        [Column("CARTECREDITID")]
         public int CarteCreditId { get; set; }
         
         [Required]
-        [Column("numero")]
+        [Column("NUMERO")]
         [StringLength(19)]
         public string Numero { get; set; }
         
         [Required]
-        [Column("dateExpiration")]
+        [Column("DATEEXPIRATION")]
         public DateTime DateExpiration { get; set; }
         
         [Column("CVV")]
         [StringLength(3)]
         public string CVV { get; set; }
         
-        [Column("typeCarte")]
+        [Column("TYPECARTE")]
         [StringLength(50)]
         public string TypeCarte { get; set; }
         

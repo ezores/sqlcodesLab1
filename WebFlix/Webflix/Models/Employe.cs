@@ -4,43 +4,43 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Webflix.Models
 {
-    [Table("Employe")]
+    [Table("EMPLOYE")]
     public class Employe
     {
         [Key]
-        [Column("matricule")]
+        [Column("MATRICULE")]
         [StringLength(7)]
         public string Matricule { get; set; }
         
         [Required]
-        [Column("motDePasse")]
+        [Column("MOTDEPASSE")]
         [StringLength(50)]
         public string MotDePasse { get; set; }
         
-        [Column("courriel")]
+        [Column("COURRIEL")]
         [StringLength(320)]
         public string Courriel { get; set; }
         
-        [Column("prenom")]
+        [Column("PRENOM")]
         [StringLength(50)]
         public string Prenom { get; set; }
         
-        [Column("nom")]
+        [Column("NOM")]
         [StringLength(50)]
         public string Nom { get; set; }
         
-        [Column("dateNaissance")]
+        [Column("DATENAISSANCE")]
         public DateTime? DateNaissance { get; set; }
         
-        [Column("numeroTelephone")]
+        [Column("NUMEROTELEPHONE")]
         [StringLength(11)]
         public string NumeroTelephone { get; set; }
         
-        [Column("adresseId")]
+        [Column("ADRESSEID")]
         public int? AdresseId { get; set; }
         
         // Navigation property
-        [ForeignKey("AdresseId")]
+        [ForeignKey("ADRESSEID")]
         public virtual Adresse Adresse { get; set; }
     }
 }

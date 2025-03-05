@@ -12,23 +12,23 @@ namespace Webflix.Models
         Prete
     }
     
-    [Table("CopieFilm")]
+    [Table("COPIEFILM")]
     public class CopieFilm
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column("copieId")]
+        [Column("COPIEID")]
         public int CopieId { get; set; }
         
         [Required]
-        [Column("filmId")]
-        public string FilmId { get; set; }
+        [Column("FILMID")]
+        public int FilmId { get; set; }
         
         [Required]
-        [Column("statut")]
+        [Column("STATUT")]
         public StatutCopie Statut { get; set; }
         
-        [ForeignKey("FilmId")]
+        [ForeignKey("FILMID")]
         public virtual Film Film { get; set; }
         
         public virtual Emprunt Emprunt { get; set; }

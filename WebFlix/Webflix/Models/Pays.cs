@@ -5,15 +5,15 @@ using System.Linq;
 
 namespace Webflix.Models
 {
-    [Table("Pays")]
+    [Table("PAYS")]
     public class Pays
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column("paysId")]
+        [Column("PAYSID")]
         public int PaysId { get; set; }
         
-        [Column("nom")]
+        [Column("NOM")]
         [StringLength(255)]
         public string Nom { get; set; }
         
