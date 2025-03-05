@@ -4,25 +4,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Webflix.Models
 {
-    [Table("Abonnement")]
+    [Table("ABONNEMENT")]
     public class Abonnement
     {
         [Key]
-        [Column("code")]
+        [Column("CODE")]
         [StringLength(1)]
-        public char Code { get; set; }
+        public string Code { get; set; }  // Use string instead of char
         
-        [Column("forfait")]
+        [Column("FORFAIT")]
         [StringLength(14)]
         public string Forfait { get; set; }
         
-        [Column("coutMensuel")]
+        [Column("COUTMENSUEL")]
         public float? CoutMensuel { get; set; }
         
-        [Column("empruntMax")]
+        [Column("EMPRUNTMAX")]
         public int? EmpruntMax { get; set; }
         
-        [Column("dureeMax")]
+        [Column("DUREEMAX")]
         public int? DureeMax { get; set; }
         
         // Navigation property

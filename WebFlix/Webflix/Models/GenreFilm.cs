@@ -3,20 +3,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Webflix.Models
 {
-    [Table("GenreFilm")]
+    [Table("GENREFILM")]
     public class GenreFilm
     {
         [Key]
-        [Column("genre")]
+        [Column("GENRE")]
         [StringLength(50)]
         public string Genre { get; set; }
         
         [Key]
-        [Column("filmId")]
+        [Column("FILMID")]
         public int FilmId { get; set; }
         
         // Navigation property
-        [ForeignKey("FilmId")]
+        [ForeignKey("FILMID")]
         public virtual Film Film { get; set; }
     }
 }

@@ -5,56 +5,56 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Webflix.Models
 {
-    [Table("Client")]
+    [Table("CLIENT")]
     public class Client
     {
         [Key]
-        [Column("clientId")]
+        [Column("CLIENTID")]
         public int ClientId { get; set; }
         
         [Required]
-        [Column("motDePasse")]
+        [Column("MOTDEPASSE")]
         [StringLength(50)]
         public string MotDePasse { get; set; }
         
-        [Column("courriel")]
+        [Column("COURRIEL")]
         [StringLength(320)]
         public string Courriel { get; set; }
         
-        [Column("prenom")]
+        [Column("PRENOM")]
         [StringLength(50)]
         public string Prenom { get; set; }
         
-        [Column("nom")]
+        [Column("NOM")]
         [StringLength(50)]
         public string Nom { get; set; }
         
-        [Column("dateNaissance")]
+        [Column("DATENAISSANCE")]
         public DateTime? DateNaissance { get; set; }
         
-        [Column("numeroTelephone")]
+        [Column("NUMEROTELEPHONE")]
         [StringLength(13)]
         public string NumeroTelephone { get; set; }
         
-        [Column("adresseId")]
+        [Column("ADRESSEID")]
         public int? AdresseId { get; set; }
         
-        [Column("carteCreditId")]
-        [StringLength(16)]
-        public string CarteCreditId { get; set; }
+        [Column("CARTECREDITID")]
+        //[StringLength(16)]
+        public int? CarteCreditId { get; set; }
         
-        [Column("codeAbonnement")]
+        [Column("CODEABONNEMENT")]
         [StringLength(1)]
-        public char? CodeAbonnement { get; set; }
+        public string CodeAbonnement { get; set; }
         
         // Navigation properties
-        [ForeignKey("AdresseId")]
+        [ForeignKey("ADRESSEID")]
         public virtual Adresse Adresse { get; set; }
         
-        [ForeignKey("CarteCreditId")]
+        [ForeignKey("CARTECREDITID")]
         public virtual CarteCredit CarteCredit { get; set; }
         
-        [ForeignKey("CodeAbonnement")]
+        [ForeignKey("CODEABONNEMENT")]
         public virtual Abonnement Abonnement { get; set; }
         
         // Collection pour les emprunts

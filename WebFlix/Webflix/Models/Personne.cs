@@ -6,29 +6,29 @@ using System.Linq;
 
 namespace Webflix.Models
 {
-    [Table("Personne")]
+    [Table("PERSONNE")]
     public class Personne
     {
         [Key]
-        [Column("personneId")]
+        [Column("PERSONNEID")]
         public int PersonneId { get; set; }
         
-        [Column("nom")]
+        [Column("NOM")]
         [StringLength(100)]
         public string Nom { get; set; }
         
-        [Column("dateNaissance")]
+        [Column("DATENAISSANCE")]
         public DateTime? DateNaissance { get; set; }
         
-        [Column("lieuNaissance")]
+        [Column("LIEUNAISSANCE")]
         [StringLength(100)]
         public string LieuNaissance { get; set; }
         
-        [Column("photo")]
+        [Column("PHOTO")]
         [StringLength(2048)]
         public string Photo { get; set; }
         
-        [Column("biographie")]
+        [Column("BIOGRAPHIE")]
         public string Biographie { get; set; }
         
         // Navigation properties pour les relations

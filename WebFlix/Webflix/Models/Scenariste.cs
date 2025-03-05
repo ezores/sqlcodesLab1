@@ -5,14 +5,14 @@ using System.Linq;
 
 namespace Webflix.Models
 {
-    [Table("Scenariste")]
+    [Table("SCENARISTE")]
     public class Scenariste
     {
         [Key]
-        [Column("scenaristeId")]
+        [Column("SCENARISTEID")]
         public int ScenaristeId { get; set; }
         
-        [Column("nom")]
+        [Column("NOM")]
         [StringLength(50)]
         public string Nom { get; set; }
         

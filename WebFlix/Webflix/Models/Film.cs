@@ -6,40 +6,40 @@ using System.Linq;
 
 namespace Webflix.Models
 {
-    [Table("Film")]
+    [Table("FILM")]
     public class Film
     {
         [Key]
-        [Column("filmId")]
+        [Column("FILMID")]
         public int FilmId { get; set; }
         
-        [Column("titre")]
+        [Column("TITRE")]
         [StringLength(255)]
         public string Titre { get; set; }
         
-        [Column("anneeSortie")]
+        [Column("ANNEESORTIE")]
         public int? AnneeSortie { get; set; }
         
-        [Column("langueOriginale")]
+        [Column("LANGUEORIGINALE")]
         [StringLength(50)]
         public string LangueOriginale { get; set; }
         
-        [Column("dureeMinute")]
+        [Column("DUREEMINUTE")]
         public int? DureeMinute { get; set; }
         
-        [Column("resume")]
+        [Column("RESUME")]
         [StringLength(2083)]
         public string Resume { get; set; }
         
-        [Column("afficheUrl")]
+        [Column("AFFICHEURL")]
         [StringLength(2083)]
         public string AfficheUrl { get; set; }
         
-        [Column("realisateurId")]
+        [Column("REALISATEURID")]
         public int? RealisateurId { get; set; }
         
         // Navigation properties
-        [ForeignKey("RealisateurId")]
+        [ForeignKey("REALISATEURID")]
         public virtual Personne Realisateur { get; set; }
         
         // Collections pour les relations many-to-many

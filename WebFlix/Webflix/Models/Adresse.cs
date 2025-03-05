@@ -5,23 +5,23 @@ using System.Collections.Generic;
 namespace Webflix.Models;
 
 
-[Table("Adresse")]
+[Table("ADRESSE")]
 public class Adresse
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("adresseId")]
+    [Column("ADRESSEID")]
     public int AdresseId { get; set; }
 
-    [Column("rue")] [StringLength(255)] public string Rue { get; set; }
+    [Column("RUE")] [StringLength(255)] public string Rue { get; set; }
 
-    [Column("ville")] [StringLength(255)] public string Ville { get; set; }
+    [Column("VILLE")] [StringLength(255)] public string Ville { get; set; }
 
-    [Column("province")]
+    [Column("PROVINCE")]
     [StringLength(255)]
     public string Province { get; set; }
 
-    [Column("codePostal")]
+    [Column("CODEPOSTAL")]
     [StringLength(7)]
     public string CodePostal { get; set; }
     
