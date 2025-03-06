@@ -29,6 +29,9 @@ public partial class App : PrismApplication
         
         // Enregistrer les repositories
         containerRegistry.RegisterScoped<IFilmRepository, FilmRepository>();
+        containerRegistry.RegisterScoped<ICopieFilmRepository, CopieFilmRepository>();
+        containerRegistry.RegisterScoped<IPersonneRepository, PersonneRepository>();
+        containerRegistry.RegisterScoped<IEmployeRepository, EmployeRepository>();
         
         containerRegistry.RegisterForNavigation<SearchView, SearchViewModel>();
         containerRegistry.RegisterForNavigation<MovieGridView, MovieGridViewModel>();
