@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Reactive;
 using Avalonia.Media.Imaging;
+using Prism.Regions;
+using ReactiveUI;
+using Webflix.Resources;
+using Webflix.Views;
 using ImageHelper = Webflix.Helpers.ImageHelper;
 
 namespace Webflix.ViewModels;
@@ -30,4 +35,22 @@ public class MovieDetailsViewModel : ViewModelBase
     public string ScenaristesText { get; set; } = "Scénaristes:";
     public string ActeursText { get; set; } = "Acteurs et personnages:";
     public string ResumeText { get; set; } = "Résumé:";
+    
+    
+    
+    private readonly IRegionManager _regionManager;
+    
+    public ReactiveCommand<Unit, Unit> OpenPersonDetailsCommand { get; set; }
+
+    public MovieDetailsViewModel(IRegionManager regionManager)
+    {
+        _regionManager = regionManager;
+
+        OpenPersonDetailsCommand = ReactiveCommand.Create(OpenPersonDetailsCommandExecute);
+    }
+    
+    private void OpenPersonDetailsCommandExecute()
+    {
+        _regionManager.RequestNavigate(Regions.MainRegion, nameof(PersonDetailsView));
+    }
 }

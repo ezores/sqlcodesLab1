@@ -1,0 +1,51 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Webflix.Views.PersonDetailsView"
+             xmlns:vm="clr-namespace:Webflix.ViewModels"
+             x:DataType="vm:PersonDetailsViewModel">
+    
+    <Grid Background="#262626" ColumnDefinitions="1*,2*" Margin="20">
+        <!-- Go Back Button -->
+        <Button Background="Black"
+                Height="65"
+                Width="65"
+                Content="←"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                Margin="15,15,0,0"
+                FontSize="35"
+                FontWeight="Black"
+                CornerRadius="100"
+                Command="{Binding GoBackCommand}"/>
+                    
+        <!-- Movie Image in Column 0 -->
+        <Image Source="{Binding Photo}"
+               Height="300"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Top"
+               Grid.Column="0"
+               Margin="0,10,0,0"/>
+
+        <!-- Movie Details in Column 1 -->
+        <StackPanel Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Margin="20,10,0,0">
+            
+            <TextBlock Text="{Binding NomText}" FontSize="22" Foreground="White" FontWeight="Bold"/>
+            <TextBlock Text="{Binding Nom}" FontSize="22" Foreground="White" Margin="0,0,0,10"/>
+            
+            <TextBlock Text="{Binding DateNaissanceText}" FontSize="18" Foreground="LightGray"/>
+            <TextBlock Text="{Binding DateNaissance}" FontSize="18" Foreground="White" Margin="0,0,0,10"/>
+            
+            <TextBlock Text="{Binding LieuNaissanceText}" FontSize="18" Foreground="LightGray"/>
+            <TextBlock Text="{Binding LieuNaissance}" FontSize="18" Foreground="White" Margin="0,0,0,10"/>
+            
+            <TextBlock Text="{Binding BiographieText}" FontSize="18" Foreground="LightGray"/>
+            <TextBlock Text="{Binding Biographie}" FontSize="18" Foreground="White" Margin="0,0,0,10"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
+

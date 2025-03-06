@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reactive;
+﻿using System.Reactive;
 using Prism.Regions;
 using ReactiveUI;
 using Webflix.Resources;
@@ -23,9 +21,6 @@ public class MovieTileViewModel : ViewModelBase
 
     private void OpenMovieDetailsCommandExecute()
     {
-        // ajouter loading
-        //effectuer la recherche
-        Console.WriteLine(_regionManager.Regions.First());
         _regionManager.RequestNavigate(Regions.MainRegion, nameof(MovieDetailsView));
     }
 }

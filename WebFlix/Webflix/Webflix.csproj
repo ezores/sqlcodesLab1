@@ -34,5 +34,8 @@
       <Compile Update="Views\MovieDetailsView.cs">
         <DependentUpon>MovieDetailsView.axaml</DependentUpon>
       </Compile>
+      <Compile Update="Views\PersonDetailsView.cs">
+        <DependentUpon>PersonDetailsView.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>

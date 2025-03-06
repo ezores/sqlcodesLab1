@@ -48,6 +48,12 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            
+            <TextBlock Text="{Binding LangeOriginaleText}" FontSize="18" Foreground="LightGray"/>
+            <TextBlock Text="{Binding LangeOriginale}" FontSize="18" Foreground="White" Margin="0,0,0,10"/>
+            
+            <TextBlock Text="{Binding DureeMinuteText}" FontSize="18" Foreground="LightGray"/>
+            <TextBlock Text="{Binding DureeMinute}" FontSize="18" Foreground="White" Margin="0,0,0,10"/>
 
             <TextBlock Text="{Binding GenresText}" FontSize="18" Foreground="LightGray"/>
             <ItemsControl ItemsSource="{Binding Genres}">
@@ -59,8 +65,12 @@
             </ItemsControl>
 
             <TextBlock Text="{Binding RealisateurText}" FontSize="18" Foreground="LightGray"/>
-            <TextBlock Text="{Binding Realisateur}" FontSize="18" Foreground="White" Margin="0,0,0,10"/>
-
+            <Button Command="{Binding OpenPersonDetailsCommand}"
+                    Background="Transparent"
+                    BorderThickness="0">
+                <TextBlock Text="{Binding Realisateur}" FontSize="18" Foreground="Red" Margin="0,0,0,10"/>
+            </Button>
+            
             <TextBlock Text="{Binding ScenaristesText}" FontSize="18" Foreground="LightGray"/>
             <ItemsControl ItemsSource="{Binding Scenaristes}">
                 <ItemsControl.ItemTemplate>
@@ -71,13 +81,7 @@
             </ItemsControl>
 
             <TextBlock Text="{Binding ActeursText}" FontSize="18" Foreground="LightGray"/>
-            <ItemsControl ItemsSource="{Binding Acteurs}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" FontSize="18" Foreground="White"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            
 
             <TextBlock Text="{Binding ResumeText}" FontSize="18" Foreground="LightGray"/>
             <TextBlock Text="{Binding Resume}" FontSize="18" Foreground="White" Margin="0,0,0,10"/>
