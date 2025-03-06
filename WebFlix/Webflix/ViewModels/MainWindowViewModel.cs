@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reactive;
+using Prism.Events;
 using Prism.Regions;
 using ReactiveUI;
 using Webflix.Resources;
@@ -15,7 +16,8 @@ namespace Webflix.ViewModels;
 public class MainWindowViewModel : ViewModelBase
 {
     private readonly IRegionManager _regionManager;
-
+    private readonly IAuthenticationService _authService;
+    
     private string _errorMessage = string.Empty;
 
     public string ErrorMessage
@@ -45,10 +47,11 @@ public class MainWindowViewModel : ViewModelBase
     
     private readonly IClientRepository _clientRepository;
     
-    public MainWindowViewModel(IRegionManager regionManager, IClientRepository clientRepository)
+    public MainWindowViewModel(IRegionManager regionManager, IAuthenticationService authService)
     {
         _regionManager = regionManager;
-        _clientRepository = clientRepository;
+        _authService = authService;
+        //_clientRepository = clientRepository;
         SignInCommand = ReactiveCommand.Create(SignInCommandExecute);
     }
 
@@ -62,39 +65,18 @@ public class MainWindowViewModel : ViewModelBase
 
     private async void SignInCommandExecute()
     {
-        // Console.WriteLine("[DEBUG] SignInCommandExecute() started.");
-
-        string plainPassword = PasswordTextBox?.Trim() ?? "";
-        string email = UserNameTextBox?.Trim() ?? "";
-
-        // Console.WriteLine($"[DEBUG] Attempting login with email: \"{email}\" and password: \"{plainPassword}\"");
-
-        bool isAuthenticated = false;
-
-        try
-        {
-            isAuthenticated = await _clientRepository.AuthenticateAsync(email, plainPassword);
-        }
-        catch (Exception ex)
-        {
-            // Console.WriteLine("[DEBUG] EXCEPTION thrown: " + ex.Message);
-            isAuthenticated = false;
-        }
+        var (isAuthenticated, errorMessage) = await _authService.AuthenticateAsync(UserNameTextBox, PasswordTextBox);
 
         if (isAuthenticated)
         {
-            // Console.WriteLine("[DEBUG] Credentials validated. Navigating to SearchView...");
-            ErrorMessage = string.Empty;
+            errorMessage = string.Empty;
             IsErrorMessageVisible = false;
             _regionManager.RequestNavigate(Regions.MainRegion, nameof(SearchView));
         }
         else
         {
-            // Console.WriteLine("[DEBUG] Invalid credentials. Setting error message.");
-            ErrorMessage = "Invalid credentials. Please try again.";
+            this.ErrorMessage = errorMessage;
             IsErrorMessageVisible = true;
         }
-
-        // Console.WriteLine("[DEBUG] SignInCommandExecute() finished.");
     }
 }
