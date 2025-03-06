@@ -14,6 +14,16 @@ public class MyDbContext : DbContext
     public DbSet<Film> Films { get; set; }
     public DbSet<Adresse> Adresses { get; set; }
     public DbSet<BandeAnnonce> BandesAnnonces { get; set; }
+    public DbSet<Emprunt> Emprunts { get; set; }
+    public DbSet<Personne> Personnes { get; set; }
+    public DbSet<Pays> Pays { get; set; }
+    public DbSet<Scenariste> Scenaristes { get; set; }
+    public DbSet<Abonnement> Abonnements { get; set; }
+    public DbSet<ActeurFilm> ActeursFilms { get; set; }
+    public DbSet<GenreFilm> GenresFilms { get; set; }
+    public DbSet<PaysFilm> PaysFilms { get; set; }
+    public DbSet<ScenaristeFilm> ScenaristesFilms { get; set; }
+    
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -87,7 +97,6 @@ public class MyDbContext : DbContext
             .HasOne(c => c.CarteCredit)
             .WithMany(cc => cc.Clients)
             .HasForeignKey(c => c.CarteCreditId);
-
             
         // Autres configurations de relations...
         
