@@ -82,7 +82,7 @@ namespace Webflix.Repositories
                     CodeAbonnementTrimmed = c.CodeAbonnement != null ? c.CodeAbonnement.Trim() : null
                 })
                 .FirstOrDefaultAsync();
-
+            
             return client != null; // Return true if a client was found, false otherwise
         }
         

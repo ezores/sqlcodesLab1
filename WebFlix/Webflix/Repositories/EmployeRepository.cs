@@ -58,17 +58,19 @@ namespace Webflix.Repositories
         
         // Implémentation des méthodes spécifiques
         
-        public async Task<bool> AuthenticateAsync(string matricule, string password)
+        public async Task<bool> AuthenticateAsync(string email, string password)
         {
             var employe = await _context.Employes
-                .FirstOrDefaultAsync(e => e.Matricule == matricule);
-                
-            if (employe == null)
-                return false;
-                
-            // Note: Dans une application réelle, vous devriez utiliser un hachage sécurisé
-            // pour les mots de passe, pas une comparaison directe
-            return employe.MotDePasse == password;
+                .Where(e => e.Courriel == email && e.MotDePasse == password)
+                .Select(e => new
+                {
+                    e.Matricule,
+                    e.Courriel,
+                    e.MotDePasse
+                })
+                .FirstOrDefaultAsync();
+
+            return employe != null; // Return true if an employee was found, false otherwise
         }
         
         public async Task<Employe> GetByEmailAsync(string email)

@@ -7,6 +7,7 @@ using Prism.Regions;
 using Webflix.Repositories;
 using Webflix.Repositories.Interfaces;
 using Webflix.Resources;
+using Webflix.Services;
 using Webflix.ViewModels;
 using Webflix.Views;
 
@@ -32,7 +33,8 @@ public partial class App : PrismApplication
         containerRegistry.RegisterScoped<ICopieFilmRepository, CopieFilmRepository>();
         containerRegistry.RegisterScoped<IPersonneRepository, PersonneRepository>();
         containerRegistry.RegisterScoped<IEmployeRepository, EmployeRepository>();
-        containerRegistry.RegisterScoped<IClientRepository, ClientRepository>(); 
+        containerRegistry.RegisterScoped<IClientRepository, ClientRepository>();
+        containerRegistry.RegisterScoped<IAuthenticationService, AuthenticationService>();
         containerRegistry.RegisterForNavigation<SearchView, SearchViewModel>();
         containerRegistry.RegisterForNavigation<MovieGridView, MovieGridViewModel>();
     }
