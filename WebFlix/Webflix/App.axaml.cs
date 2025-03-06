@@ -32,7 +32,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterScoped<ICopieFilmRepository, CopieFilmRepository>();
         containerRegistry.RegisterScoped<IPersonneRepository, PersonneRepository>();
         containerRegistry.RegisterScoped<IEmployeRepository, EmployeRepository>();
-        
+        containerRegistry.RegisterScoped<IClientRepository, ClientRepository>(); 
         containerRegistry.RegisterForNavigation<SearchView, SearchViewModel>();
         containerRegistry.RegisterForNavigation<MovieGridView, MovieGridViewModel>();
     }

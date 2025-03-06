@@ -73,14 +73,17 @@ namespace Webflix.Repositories
         public async Task<bool> AuthenticateAsync(string email, string password)
         {
             var client = await _context.Clients
-                .FirstOrDefaultAsync(c => c.Courriel == email);
-                
-            if (client == null)
-                return false;
-                
-            // Note: Dans une application réelle, vous devriez utiliser un hachage sécurisé
-            // pour les mots de passe, pas une comparaison directe
-            return client.MotDePasse == password;
+                .Where(c => c.Courriel == email && c.MotDePasse == password)
+                .Select(c => new
+                {
+                    c.ClientId,
+                    c.Courriel,
+                    c.MotDePasse,
+                    CodeAbonnementTrimmed = c.CodeAbonnement != null ? c.CodeAbonnement.Trim() : null
+                })
+                .FirstOrDefaultAsync();
+
+            return client != null; // Return true if a client was found, false otherwise
         }
         
         public async Task<IEnumerable<Emprunt>> GetActiveRentalsAsync(int clientId)
