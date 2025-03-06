@@ -36,11 +36,11 @@
            </ListBox.ItemsPanel>
            <ListBox.ItemTemplate>
                <DataTemplate>
-                   <Border Background="Black"
+                   <Button Background="Black"
                            CornerRadius="8"
                            Padding="0,5">
                        <views:MovieTileView Margin="15,0"/>
-                   </Border>
+                   </Button>
                </DataTemplate>
            </ListBox.ItemTemplate>
        </ListBox>

@@ -18,15 +18,15 @@ public class MovieGridViewModel : ViewModelBase
 
     public MovieGridViewModel()
     {
-        //SearchResults.Add(new MovieTileViewModel());
-        //SearchResults.Add(new MovieTileViewModel());
-        //SearchResults.Add(new MovieTileViewModel());
-        //SearchResults.Add(new MovieTileViewModel());
-        //SearchResults.Add(new MovieTileViewModel());
-        //SearchResults.Add(new MovieTileViewModel());
-        //SearchResults.Add(new MovieTileViewModel());
-        //SearchResults.Add(new MovieTileViewModel());
-        //SearchResults.Add(new MovieTileViewModel());
+        SearchResults.Add(new MovieTileViewModel());
+        SearchResults.Add(new MovieTileViewModel());
+        SearchResults.Add(new MovieTileViewModel());
+        SearchResults.Add(new MovieTileViewModel());
+        SearchResults.Add(new MovieTileViewModel());
+        SearchResults.Add(new MovieTileViewModel());
+        SearchResults.Add(new MovieTileViewModel());
+        SearchResults.Add(new MovieTileViewModel());
+        SearchResults.Add(new MovieTileViewModel());
         //SearchResults.Add(new MovieTileViewModel());
         //SearchResults.Add(new MovieTileViewModel());
         //SearchResults.Add(new MovieTileViewModel());

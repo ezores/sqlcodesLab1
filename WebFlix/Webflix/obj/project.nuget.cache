@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "gBL0pq1v7gnZHYZGhtdshCIusd7iyYmeJsbc4nMyYww4gl7Ogt/8wpk+fazJq886+9UowMUXWwdYXvaXREC18g==",
+  "dgSpecHash": "8GDDccI9FLNySyV9Gs5iKTw0AVjtfYLillqMSOLWx024WyK+MHv9tZgavwpXA8yw2izNzuc6cBZUltqRca1W0g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\max97\\RiderProjects\\Webflix\\Webflix\\Webflix.csproj",
+  "projectFilePath": "C:\\Users\\max97\\OneDrive\\Bureau\\All\\ETS\\LOG\\Session5\\LOG660\\Laboratoires\\sqlcodesLab1\\WebFlix\\Webflix\\Webflix.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\max97\\.nuget\\packages\\avalonia\\11.2.3\\avalonia.11.2.3.nupkg.sha512",
     "C:\\Users\\max97\\.nuget\\packages\\avalonia.angle.windows.natives\\2.1.22045.20230930\\avalonia.angle.windows.natives.2.1.22045.20230930.nupkg.sha512",
