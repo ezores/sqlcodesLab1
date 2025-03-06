@@ -73,10 +73,6 @@
               "target": "Package",
               "version": "[1.0.43, )"
             },
-            "Oracle.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[9.23.60, )"
-            },
             "Prism.Avalonia": {
               "target": "Package",
               "version": "[8.1.97.11073, )"
