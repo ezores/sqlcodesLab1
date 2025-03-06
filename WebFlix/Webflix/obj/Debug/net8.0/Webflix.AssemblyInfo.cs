@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Webflix")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7c64713b8e8b11b45e8fbb0ca1748692cea99575")]
 [assembly: System.Reflection.AssemblyProductAttribute("Webflix")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Webflix")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -20,6 +20,11 @@ public class ClientMapper {
         List<Client> clients = new ArrayList<>();
 
         for (ClientDTO clientDto : clientsDto) {
+
+            if (clientDto.getCreditInfo().getExpiryYear() < 2024) {
+                continue;
+            }
+
             Client client = new Client();
 
             client.setId(clientDto.getId());

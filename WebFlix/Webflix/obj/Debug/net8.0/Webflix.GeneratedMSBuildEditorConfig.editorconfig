@@ -15,21 +15,21 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Webflix
-build_property.ProjectDir = C:\Users\max97\RiderProjects\Webflix\Webflix\
+build_property.ProjectDir = C:\Users\max97\OneDrive\Bureau\All\ETS\LOG\Session5\LOG660\Laboratoires\sqlcodesLab1\WebFlix\Webflix\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 
-[C:/Users/max97/RiderProjects/Webflix/Webflix/App.axaml]
+[C:/Users/max97/OneDrive/Bureau/All/ETS/LOG/Session5/LOG660/Laboratoires/sqlcodesLab1/WebFlix/Webflix/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/max97/RiderProjects/Webflix/Webflix/Views/MainWindow.axaml]
+[C:/Users/max97/OneDrive/Bureau/All/ETS/LOG/Session5/LOG660/Laboratoires/sqlcodesLab1/WebFlix/Webflix/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/max97/RiderProjects/Webflix/Webflix/Views/MovieGridView.axaml]
+[C:/Users/max97/OneDrive/Bureau/All/ETS/LOG/Session5/LOG660/Laboratoires/sqlcodesLab1/WebFlix/Webflix/Views/MovieGridView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/max97/RiderProjects/Webflix/Webflix/Views/MovieTileView.axaml]
+[C:/Users/max97/OneDrive/Bureau/All/ETS/LOG/Session5/LOG660/Laboratoires/sqlcodesLab1/WebFlix/Webflix/Views/MovieTileView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/max97/RiderProjects/Webflix/Webflix/Views/SearchView.axaml]
+[C:/Users/max97/OneDrive/Bureau/All/ETS/LOG/Session5/LOG660/Laboratoires/sqlcodesLab1/WebFlix/Webflix/Views/SearchView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

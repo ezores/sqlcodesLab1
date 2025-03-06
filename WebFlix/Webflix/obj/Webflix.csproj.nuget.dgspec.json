@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\max97\\RiderProjects\\Webflix\\Webflix\\Webflix.csproj": {}
+    "C:\\Users\\max97\\OneDrive\\Bureau\\All\\ETS\\LOG\\Session5\\LOG660\\Laboratoires\\sqlcodesLab1\\WebFlix\\Webflix\\Webflix.csproj": {}
   },
   "projects": {
-    "C:\\Users\\max97\\RiderProjects\\Webflix\\Webflix\\Webflix.csproj": {
+    "C:\\Users\\max97\\OneDrive\\Bureau\\All\\ETS\\LOG\\Session5\\LOG660\\Laboratoires\\sqlcodesLab1\\WebFlix\\Webflix\\Webflix.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\max97\\RiderProjects\\Webflix\\Webflix\\Webflix.csproj",
+        "projectUniqueName": "C:\\Users\\max97\\OneDrive\\Bureau\\All\\ETS\\LOG\\Session5\\LOG660\\Laboratoires\\sqlcodesLab1\\WebFlix\\Webflix\\Webflix.csproj",
         "projectName": "Webflix",
-        "projectPath": "C:\\Users\\max97\\RiderProjects\\Webflix\\Webflix\\Webflix.csproj",
+        "projectPath": "C:\\Users\\max97\\OneDrive\\Bureau\\All\\ETS\\LOG\\Session5\\LOG660\\Laboratoires\\sqlcodesLab1\\WebFlix\\Webflix\\Webflix.csproj",
         "packagesPath": "C:\\Users\\max97\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\max97\\RiderProjects\\Webflix\\Webflix\\obj\\",
+        "outputPath": "C:\\Users\\max97\\OneDrive\\Bureau\\All\\ETS\\LOG\\Session5\\LOG660\\Laboratoires\\sqlcodesLab1\\WebFlix\\Webflix\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -72,6 +72,10 @@
             "NP.Ava.Visuals": {
               "target": "Package",
               "version": "[1.0.43, )"
+            },
+            "Oracle.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.23.60, )"
             },
             "Prism.Avalonia": {
               "target": "Package",
