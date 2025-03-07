@@ -1,0 +1,35 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Webflix.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Webflix.Views.PersonView"
+             x:DataType="vm:PersonViewModel"
+             Background="#262626">
+    <Grid ColumnDefinitions=".3*,9.7*">
+        <Button Grid.Column="0"
+                Background="Black"
+                Height="65"
+                Width="65"
+                Content="←"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center"
+                Margin="15,15,0,0"
+                FontSize="35"
+                FontWeight="Black"
+                CornerRadius="100"
+                Command="{Binding GoBackCommand}"/>
+        <Grid Grid.Column="1" RowDefinitions="1*,5*,3*,1*" ColumnDefinitions="1*,4*,4*,1*">
+            <Image Grid.Row="1"
+                   Grid.Column="1"
+                   Source="../Assets/spiderman.jpg"/>
+            <TextBlock Grid.Row="1"
+                       Grid.Column="2"
+                       Text="{Binding Biography}"
+                       TextWrapping="Wrap"/>
+        </Grid>
+    </Grid>
+</UserControl>

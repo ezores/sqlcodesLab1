@@ -39,7 +39,8 @@
                 VerticalContentAlignment="Center"
                 HorizontalContentAlignment="Center"
                 Margin="20,0"
-                IsVisible="{Binding IsLogoutVisible}">
+                IsVisible="{Binding IsLogoutVisible}"
+                Command="{Binding LogOutCommand}">
             <Viewbox>
                 <Image Source="../Assets/logout.png"/>
             </Viewbox>

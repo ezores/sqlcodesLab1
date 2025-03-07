@@ -6,7 +6,7 @@ namespace Webflix.ViewModels;
 
 public class ViewModelBase : ReactiveObject, INavigationAware
 {
-    private IRegionNavigationService? _navigationService;
+    protected IRegionNavigationService? _navigationService;
     
     public ReactiveCommand<Unit, Unit> GoBackCommand { get; set; }
 

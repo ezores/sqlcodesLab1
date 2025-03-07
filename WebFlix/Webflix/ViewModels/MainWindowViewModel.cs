@@ -36,12 +36,21 @@ public class MainWindowViewModel : ViewModelBase
     public string PasswordTextBox { get; set; } = string.Empty;
     
     public ReactiveCommand<Unit, Unit> SignInCommand { get; set; }
+    public ReactiveCommand<Unit, Unit> LogOutCommand { get; set; }
 
     public MainWindowViewModel(IRegionManager regionManager)
     {
         _regionManager = regionManager;
         
         SignInCommand = ReactiveCommand.Create(SignInCommandExecute);
+        LogOutCommand = ReactiveCommand.Create(LogOutCommandExecute);
+    }
+
+    public override void OnNavigatedTo(NavigationContext navigationContext)
+    {
+        base.OnNavigatedTo(navigationContext);
+
+        IsLogoutVisible = false;
     }
 
     private bool _isLogoutVisible;
@@ -57,6 +66,16 @@ public class MainWindowViewModel : ViewModelBase
         //if client exists: navigate to search view
         // else show error message.
         
-        _regionManager.RequestNavigate(Regions.MainRegion, nameof(SearchView));
+        _regionManager.RequestNavigate(Regions.MainRegion, nameof(SearchView), result =>
+        {
+            IsLogoutVisible = true;
+        });
+    }
+    
+    private void LogOutCommandExecute()
+    {
+        IsLogoutVisible = false;
+        _navigationService?.Journal.Clear();
+        _regionManager.Regions[Regions.MainRegion].RemoveAll();
     }
 }
