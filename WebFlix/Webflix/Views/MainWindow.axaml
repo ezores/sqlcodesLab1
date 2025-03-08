@@ -110,7 +110,6 @@
                             BorderBrush="Red"
                             BorderThickness="2"
                             CornerRadius="8"
-                            Margin="20,0"
                             Padding="10"
                             IsVisible="{Binding IsErrorMessageVisible}">
                         <TextBlock Text="{Binding ErrorMessage}"

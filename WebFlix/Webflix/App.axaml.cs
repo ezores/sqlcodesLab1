@@ -35,7 +35,12 @@ public partial class App : PrismApplication
         containerRegistry.RegisterScoped<IPersonneRepository, PersonneRepository>();
         containerRegistry.RegisterScoped<IEmployeRepository, EmployeRepository>();
         containerRegistry.RegisterScoped<IClientRepository, ClientRepository>();
+        containerRegistry.RegisterScoped<IInformationRepository, InformationRepository>();
+        
+        // Services
         containerRegistry.RegisterScoped<IAuthenticationService, AuthenticationService>();
+        
+        // Navigation
         containerRegistry.RegisterForNavigation<SearchView, SearchViewModel>();
         containerRegistry.RegisterForNavigation<MovieGridView, MovieGridViewModel>();
         containerRegistry.RegisterForNavigation<MovieView, MovieViewModel>();
