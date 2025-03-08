@@ -112,19 +112,12 @@ public class MovieViewModel : ViewModelBase
     #endregion
 
     private string _selectedActor;
-    private string _selectedScreenwriter;
     private string _selectedTrailer;
     
     public string SelectedActor
     {
         get => _selectedActor;
         set => this.RaiseAndSetIfChanged(ref _selectedActor, value);
-    }
-
-    public string SelectedScreenwriter
-    {
-        get => _selectedScreenwriter;
-        set => this.RaiseAndSetIfChanged(ref _selectedScreenwriter, value);
     }
 
     public string SelectedTrailer
@@ -134,9 +127,8 @@ public class MovieViewModel : ViewModelBase
     }
     
     public ReactiveCommand<Unit, Unit> ActorCommand { get; set; }
-    public ReactiveCommand<Unit, Unit> ScreenwriterCommand { get; set; }
+    public ReactiveCommand<Unit, Unit> DirectorCommand { get; set; }
     public ReactiveCommand<Unit, Unit> TrailerCommand { get; set; }
-    
     public ReactiveCommand<Unit, Unit> RentCommand { get; set; }
     
     public MovieViewModel(IRegionManager regionManager)
@@ -144,7 +136,7 @@ public class MovieViewModel : ViewModelBase
         _regionManager = regionManager;
         
         ActorCommand = ReactiveCommand.Create(ActorCommandExecute);
-        ScreenwriterCommand = ReactiveCommand.Create(ScreenwriterCommandExecute);
+        DirectorCommand = ReactiveCommand.Create(DirectorCommandExecute);
         TrailerCommand = ReactiveCommand.Create(NavigateToTrailerView);
         RentCommand = ReactiveCommand.CreateFromTask(RentCommandExecute);
     }
@@ -223,14 +215,14 @@ public class MovieViewModel : ViewModelBase
         _regionManager.RequestNavigate(Regions.MainRegion, nameof(PersonView), parameters);
     }
     
-    private void ScreenwriterCommandExecute()
+    private void DirectorCommandExecute()
     {
-        // var parameters = new NavigationParameters
-        // {
-        //     { PERSON_PARAMETER, get la personne dans la bd avec SelectedScreenwriter }
-        // }
+        var parameters = new NavigationParameters
+        {
+            { PERSON_PARAMETER, _movie?.Realisateur }
+        };
         
-        _regionManager.RequestNavigate(Regions.MainRegion, nameof(PersonView)/*, parameters*/);
+        _regionManager.RequestNavigate(Regions.MainRegion, nameof(PersonView), parameters);
     }
 
     private void NavigateToTrailerView()

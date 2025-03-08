@@ -89,14 +89,18 @@
                             Orientation="Vertical"
                             Margin="10">
                     <TextBlock Text="Director:"/>
-                    <TextBlock Text="{Binding DirectorName}"
-                               Margin="0,0,0,10"/>
+                    <Button Content="{Binding DirectorName}"
+                               Margin="0,0,0,10"
+                               HorizontalContentAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Height="40"
+                               Width="200"
+                               Command="{Binding DirectorCommand}"/>
                     
                     <TextBlock Text="Screenwriters:"/>
-                    <ListBox ItemsSource="{Binding Screenwriters}"
+                    <ItemsControl ItemsSource="{Binding Screenwriters}"
                              Margin="0,0,0,10"
-                             x:Name="ScreenWriterList"
-                             SelectedItem="{Binding SelectedScreenwriter}"/>
+                             x:Name="ScreenWriterList"/>
                     
                     <TextBlock Text="Actors"/>
                     <ListBox ItemsSource="{Binding Actors}"

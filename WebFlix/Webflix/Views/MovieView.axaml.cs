@@ -23,7 +23,14 @@ public partial class MovieView : UserControl
         
         TrailerList.AddHandler(PointerReleasedEvent, OnTrailerPointerReleased, RoutingStrategies.Tunnel);
         ActorList.AddHandler(PointerReleasedEvent, OnActorPointerReleased, RoutingStrategies.Tunnel);
-        ScreenWriterList.AddHandler(PointerReleasedEvent, OnScreenwriterPointerReleased, RoutingStrategies.Tunnel);
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        
+        TrailerList.RemoveHandler(PointerReleasedEvent, OnTrailerPointerReleased);
+        ActorList.RemoveHandler(PointerReleasedEvent, OnActorPointerReleased);
     }
 
     private void OnTrailerPointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -42,11 +49,4 @@ public partial class MovieView : UserControl
         }
     }
     
-    private void OnScreenwriterPointerReleased(object? sender, PointerReleasedEventArgs e)
-    {
-        if (e.IsListBoxItemClicked())
-        {
-            DataContext?.ScreenwriterCommand.Execute().Subscribe();
-        }
-    }
 }
