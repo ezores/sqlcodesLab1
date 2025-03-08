@@ -1,6 +1,8 @@
+using System.Net.Http;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Microsoft.Extensions.DependencyInjection;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Regions;
@@ -45,6 +47,17 @@ public partial class App : PrismApplication
         containerRegistry.RegisterForNavigation<MovieGridView, MovieGridViewModel>();
         containerRegistry.RegisterForNavigation<MovieView, MovieViewModel>();
         containerRegistry.RegisterForNavigation<PersonView, PersonViewModel>();
+        AddHttpClientFactory(containerRegistry);
+    }
+
+    private void AddHttpClientFactory(IContainerRegistry containerRegistry)
+    {
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddHttpClient();
+        var provider = serviceCollection.BuildServiceProvider();
+
+        containerRegistry.RegisterInstance(typeof(IHttpClientFactory),
+            provider.GetRequiredService<IHttpClientFactory>());
     }
     
     protected override AvaloniaObject CreateShell() => Container.Resolve<MainWindow>();

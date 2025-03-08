@@ -25,11 +25,29 @@
         <Grid Grid.Column="1" RowDefinitions="1*,5*,3*,1*" ColumnDefinitions="1*,4*,4*,1*">
             <Image Grid.Row="1"
                    Grid.Column="1"
-                   Source="../Assets/spiderman.jpg"/>
+                   Source="{Binding PersonPhoto}"/>
             <TextBlock Grid.Row="1"
                        Grid.Column="2"
                        Text="{Binding Biography}"
                        TextWrapping="Wrap"/>
+            <StackPanel Grid.Row="1"
+                        Grid.Column="2"
+                        Orientation="Vertical"
+                        Spacing="20"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center">
+                <TextBlock Text="Nom:"/>
+                <TextBlock Text="{Binding Name}"
+                           Margin="0,0,0,10"/>
+                    
+                <TextBlock Text="Annee de naissance:"/>
+                <TextBlock Text="{Binding Birthday}"
+                           Margin="0,0,0,10"/>
+                
+                <TextBlock Text="Lieu de naissance:"/>
+                <TextBlock Text="{Binding BirthPlace}"
+                           Margin="0,0,0,10"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

@@ -1,8 +1,8 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Collections.Generic;
 
-namespace Webflix.Models;
+namespace Webflix.Models.Entities;
 
 
 [Table("ADRESSE")]

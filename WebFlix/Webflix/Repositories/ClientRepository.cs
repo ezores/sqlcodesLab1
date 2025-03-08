@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Webflix.Models;
+using Webflix.Models.Entities;
 using Webflix.Repositories.Interfaces;
 
 namespace Webflix.Repositories

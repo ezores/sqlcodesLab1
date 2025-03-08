@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace Webflix.Models
+namespace Webflix.Models.Entities
 {
     [Table("PERSONNE")]
     public class Personne

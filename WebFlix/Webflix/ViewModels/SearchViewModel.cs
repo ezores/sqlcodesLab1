@@ -134,9 +134,10 @@ public class SearchViewModel : ViewModelBase
     {
         // var films = _filmRepository.SearchAdvanced(Title, MinYear, MaxYear, Director, Actor, Country, Language, Genre)
         //
+        
         // var parameters = new NavigationParameters
         // {
-        //     { FILMS_PARAMETER, films }
+        //     { FILMS_PARAMETER, new MovieSearchResult { Films = films } }
         // };
         
         _regionManager.RequestNavigate(Regions.MainRegion, nameof(MovieGridView)/*, parameters*/);

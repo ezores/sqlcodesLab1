@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive;
+using System.Threading.Tasks;
+using Avalonia.Media.Imaging;
+using MsBox.Avalonia;
 using Prism.Regions;
 using ReactiveUI;
+using Webflix.Helpers;
+using Webflix.Models.Entities;
 using Webflix.Resources;
 using Webflix.Views;
 
@@ -11,7 +17,11 @@ namespace Webflix.ViewModels;
 
 public class MovieViewModel : ViewModelBase
 {
+    public static readonly string PERSON_PARAMETER = "person-parameter";
+    
     private readonly IRegionManager _regionManager;
+
+    private Film? _movie;
     
     #region ViewProperties
     private string _title = string.Empty;
@@ -25,6 +35,14 @@ public class MovieViewModel : ViewModelBase
     private ObservableCollection<string> _screenwriters = new();
     private ObservableCollection<string> _actors = new();
     private ObservableCollection<string> _trailers = new();
+    
+    private Bitmap? _moviePoster;
+
+    public Bitmap? MoviePoster
+    {
+        get => _moviePoster;
+        set => this.RaiseAndSetIfChanged(ref _moviePoster, value);
+    }
     
     public string Title
     {
@@ -119,45 +137,100 @@ public class MovieViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> ScreenwriterCommand { get; set; }
     public ReactiveCommand<Unit, Unit> TrailerCommand { get; set; }
     
+    public ReactiveCommand<Unit, Unit> RentCommand { get; set; }
+    
     public MovieViewModel(IRegionManager regionManager)
     {
-        Title = "Spider-Man";
-        ReleaseYear = "2012";
-        Language = "English";
-        MovieLength = "120";
-        DirectorName = "Director";
-        Description = "This is a description";
-        Countries.Add("Canada");
-        Countries.Add("Canada");
-        Countries.Add("Canada");
-        Genres.Add("Horror");
-        Genres.Add("Horror");
-        Genres.Add("Horror");
-        Screenwriters.Add("Screenwriter");
-        Screenwriters.Add("Screenwriter");
-        Screenwriters.Add("Screenwriter");
-        Actors.Add("Tobey");
-        Actors.Add("Tobey");
-        Actors.Add("Tobey");
-        Trailers.Add("http://www.google.com");
-        Trailers.Add("https://www.youtube.com");
-        Trailers.Add("http://www.microsoft.com");
-
         _regionManager = regionManager;
         
         ActorCommand = ReactiveCommand.Create(ActorCommandExecute);
         ScreenwriterCommand = ReactiveCommand.Create(ScreenwriterCommandExecute);
         TrailerCommand = ReactiveCommand.Create(NavigateToTrailerView);
+        RentCommand = ReactiveCommand.CreateFromTask(RentCommandExecute);
     }
 
+    public override void OnNavigatedTo(NavigationContext navigationContext)
+    {
+        base.OnNavigatedTo(navigationContext);
+
+        if (navigationContext.Parameters[MovieGridViewModel.MOVIE_PARAMETER] is Film movie)
+        {
+            _movie = movie;
+        }
+        
+        if (navigationContext.Parameters[MovieGridViewModel.POSTER_PARAMETER] is Bitmap poster)
+        {
+            MoviePoster = poster;
+        }
+        
+        InitView();
+    }
+
+    private void InitView()
+    {
+        if (_movie is null)
+        {
+            return;
+        }
+
+        Description = _movie.Resume;
+        Title = _movie.Titre;
+        ReleaseYear = _movie.AnneeSortie is null ? "Unknown" : $"{_movie.AnneeSortie}";
+        Countries.Clear();
+        Countries.AddRange(_movie.Pays.Select(x => x.Nom));
+        Language = _movie.LangueOriginale;
+        MovieLength = _movie.DureeMinute is null ? "Unknown" : $"{_movie.DureeMinute}";
+        Genres.Clear();
+        Genres.AddRange(_movie.Genres);
+        DirectorName = _movie.Realisateur.Nom;
+        Screenwriters.Clear();
+        Screenwriters.AddRange(_movie.Scenaristes.Select(x => x.Nom));
+        Actors.Clear();
+        Actors.AddRange(_movie.Acteurs.Select(x => x.Nom));
+        Trailers.Clear();
+        Trailers.AddRange(_movie.BandesAnnonces.Select(x => x.Url));
+    }
+
+    private async Task RentCommandExecute()
+    {
+        // Logique pour rent le movie avec le LocationService
+
+        //if (rented) {
+        await ShowMessage("The movie was rented succesfully");
+        // }
+        //else if (nombre de location max atteinte) {
+        //await ShowMessage("Maximum location reached");
+        //}
+        //else if (no copies left){
+        //await ShowMessage("All the copies for this movie are currently rented");
+        //}
+    }
+
+    private async Task ShowMessage(string message)
+    {
+        var box = MessageBoxManager.GetMessageBoxStandard("Webflix", message);
+        await box.ShowWindowAsync();
+    }
+    
     private void ActorCommandExecute()
     {
-        _regionManager.RequestNavigate(Regions.MainRegion, nameof(PersonView));
+        
+        // var parameters = new NavigationParameters
+        // {
+        //     { PERSON_PARAMETER, get la personne dans les actors avec SelectedActor }
+        // }
+        
+        _regionManager.RequestNavigate(Regions.MainRegion, nameof(PersonView)/*, parameters*/);
     }
     
     private void ScreenwriterCommandExecute()
     {
-        _regionManager.RequestNavigate(Regions.MainRegion, nameof(PersonView));
+        // var parameters = new NavigationParameters
+        // {
+        //     { PERSON_PARAMETER, get la personne dans la bd avec SelectedScreenwriter }
+        // }
+        
+        _regionManager.RequestNavigate(Regions.MainRegion, nameof(PersonView)/*, parameters*/);
     }
 
     private void NavigateToTrailerView()
@@ -166,7 +239,7 @@ public class MovieViewModel : ViewModelBase
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName = EnsureHttps(SelectedTrailer),
+                FileName = UrlHelper.EnsureHttps(SelectedTrailer),
                 UseShellExecute = true
             });
         }
@@ -174,14 +247,5 @@ public class MovieViewModel : ViewModelBase
         {
             //something went wrong
         }
-    }
-    
-    private string EnsureHttps(string url)
-    {
-        if (url.StartsWith("http://"))
-        {
-            return "https://" + url.Substring(7); // Replace "http://" with "https://"
-        }
-        return url; // Already secure or malformed URL
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Webflix.Models
+namespace Webflix.Models.Entities
 {
     [Table("CARTECREDIT")]
     public class CarteCredit

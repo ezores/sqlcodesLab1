@@ -1,8 +1,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Webflix;
-using Webflix.Models;
+using Webflix.Models.Entities;
+
+namespace Webflix;
 
 public class MyDbContext : DbContext
 {

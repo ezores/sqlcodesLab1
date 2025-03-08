@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Webflix.Models;
+using Webflix.Models.Entities;
 
 namespace Webflix.Repositories.Interfaces
 {

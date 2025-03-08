@@ -1,21 +1,23 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Webflix.Models
+namespace Webflix.Models.Entities
 {
-    [Table("GENREFILM")]
-    public class GenreFilm
+    [Table("PAYSFILM")]
+    public class PaysFilm
     {
         [Key]
-        [Column("GENRE")]
-        [StringLength(50)]
-        public string Genre { get; set; }
+        [Column("PAYSID")]
+        public int PaysId { get; set; }
         
         [Key]
         [Column("FILMID")]
         public int FilmId { get; set; }
         
-        // Navigation property
+        // Navigation properties
+        [ForeignKey("PAYSID")]
+        public virtual Pays Pays { get; set; }
+        
         [ForeignKey("FILMID")]
         public virtual Film Film { get; set; }
     }

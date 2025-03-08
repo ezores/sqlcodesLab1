@@ -1,9 +1,7 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
-namespace Webflix.Models
+namespace Webflix.Models.Entities
 {
     // Définition de l'enum pour les statuts possibles
     public enum StatutCopie
