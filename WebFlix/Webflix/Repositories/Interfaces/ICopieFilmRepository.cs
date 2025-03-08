@@ -16,7 +16,7 @@ namespace Webflix.Repositories.Interfaces
         Task SaveChangesAsync();
         
         // Méthodes spécifiques pour les cas d'utilisation
-        Task<IEnumerable<CopieFilm>> GetAvailableCopiesAsync(string filmId);
+        Task<IEnumerable<CopieFilm>> GetAvailableCopiesAsync(int filmId);
         Task<bool> IsAvailableAsync(int copieId);
         Task<bool> UpdateStatusAsync(int copieId, StatutCopie statut);
     }

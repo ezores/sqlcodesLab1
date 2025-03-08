@@ -21,7 +21,7 @@ namespace Webflix.Models
         public DateTime DateDebutEmprunt { get; set; }
         
         // Navigation property
-        [ForeignKey("COPIEID")]
+        [ForeignKey(nameof(CopieId))]
         public virtual CopieFilm Copie { get; set; }
     }
 }

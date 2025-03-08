@@ -15,10 +15,10 @@ namespace Webflix.Models
         public int FilmId { get; set; }
         
         // Navigation properties
-        [ForeignKey("SCENARISTEID")]
+        [ForeignKey(nameof(ScenaristeId))]
         public virtual Scenariste Scenariste { get; set; }
         
-        [ForeignKey("FILMID")]
+        [ForeignKey(nameof(FilmId))]
         public virtual Film Film { get; set; }
     }
 }

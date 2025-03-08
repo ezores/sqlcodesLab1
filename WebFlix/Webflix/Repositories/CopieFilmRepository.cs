@@ -69,18 +69,18 @@ namespace Webflix.Repositories
         
         // Implémentation des méthodes spécifiques
         
-        public async Task<IEnumerable<CopieFilm>> GetAvailableCopiesAsync(string filmId)
+        public async Task<IEnumerable<CopieFilm>> GetAvailableCopiesAsync(int filmId)
         {
             return await _context.CopiesFilm
                 .Include(c => c.Film)
-                .Where(c => Equals(c.FilmId, filmId) && c.Statut == StatutCopie.Disponible)
+                .Where(c => Equals(c.FilmId, filmId) && c.Statut == StatutCopie.DISPONIBLE)
                 .ToListAsync();
         }
         
         public async Task<bool> IsAvailableAsync(int copieId)
         {
             var copie = await _context.CopiesFilm.FindAsync(copieId);
-            return copie != null && copie.Statut == StatutCopie.Disponible;
+            return copie != null && copie.Statut == StatutCopie.DISPONIBLE;
         }
         
         public async Task<bool> UpdateStatusAsync(int copieId, StatutCopie statut)
