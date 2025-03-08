@@ -9,14 +9,14 @@ namespace Webflix.Models
         [Key]
         [Column("GENRE")]
         [StringLength(50)]
-        public string Genre { get; set; }
+        public string? Genre { get; set; }
         
         [Key]
         [Column("FILMID")]
-        public int FilmId { get; set; }
+        public int? FilmId { get; set; }
         
         // Navigation property
-        [ForeignKey("FILMID")]
+        [ForeignKey(nameof(FilmId))]
         public virtual Film Film { get; set; }
     }
 }

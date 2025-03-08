@@ -131,31 +131,33 @@ namespace Webflix.Repositories
         }
         
         public async Task<IEnumerable<Film>> SearchAdvancedAsync(
-            string title, int? year, string genre, 
-            int? actorId, int? directorId, 
+            string title, int? minYear, int? maxYear,string genre, 
+            string actor, string director, 
             string language, int? countryId)
         {
             var query = _context.Films
-                .Include(f => f.Realisateur)
-                .Include(f => f.ActeursFilms)
-                .Include(f => f.GenresFilms)
-                .Include(f => f.PaysFilms)
-                .AsQueryable();
+            .Include(f => f.Realisateur)
+            .Include(f => f.ActeursFilms)
+                .ThenInclude(f => f.Acteur)
+            .Include(f => f.GenresFilms)
+            .Include(f => f.PaysFilms)
+                .ThenInclude(f => f.Pays)
+            .AsQueryable();
                 
             if (!string.IsNullOrEmpty(title))
                 query = query.Where(f => f.Titre.Contains(title));
                 
-            if (year.HasValue)
-                query = query.Where(f => f.AnneeSortie == year.Value);
+            if (minYear.HasValue && maxYear.HasValue)
+                query = query.Where(f => f.AnneeSortie >= minYear.Value && f.AnneeSortie <= maxYear.Value);
                 
             if (!string.IsNullOrEmpty(genre))
                 query = query.Where(f => f.GenresFilms.Any(gf => gf.Genre == genre));
                 
-            if (actorId.HasValue)
-                query = query.Where(f => f.ActeursFilms.Any(af => af.ActeurId == actorId.Value));
-                
-            if (directorId.HasValue)
-                query = query.Where(f => f.RealisateurId == directorId.Value);
+            if (!string.IsNullOrEmpty(actor))
+                query = query.Where(f => f.ActeursFilms.Any(af => af.Acteur.Nom.Contains(actor)));
+            
+            if (!string.IsNullOrEmpty(director))
+                query = query.Where(f => f.Realisateur.Nom.Contains(director));
                 
             if (!string.IsNullOrEmpty(language))
                 query = query.Where(f => f.LangueOriginale == language);

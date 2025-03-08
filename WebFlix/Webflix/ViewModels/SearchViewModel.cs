@@ -1,14 +1,21 @@
-﻿using System.Reactive;
+﻿using System;
+using System.Collections.Generic;
+using System.Reactive;
+using System.Threading.Tasks;
 using Prism.Regions;
 using ReactiveUI;
+using Webflix.Models;
+using Webflix.Repositories.Interfaces;
 using Webflix.Resources;
 using Webflix.Views;
+using Webflix.Services;
 
 namespace Webflix.ViewModels;
 
 public class SearchViewModel : ViewModelBase
 {
     private readonly IRegionManager _regionManager;
+    private readonly FilmService _filmService;
     
     public string SearchString => "Search for a movie";
     public string TitleWatermark => "Title";
@@ -47,24 +54,48 @@ public class SearchViewModel : ViewModelBase
 
     public ReactiveCommand<Unit, Unit> SearchCommand { get; set; }
     
-    public SearchViewModel(IRegionManager regionManager)
+    public SearchViewModel(IRegionManager regionManager, FilmService filmService)
     {
         _regionManager = regionManager;
-        
+        _filmService = filmService;
         SearchCommand = ReactiveCommand.Create(SearchCommandExecute);
     }
 
-    private void SearchCommandExecute()
+    private async void SearchCommandExecute()
     {
-        // ajouter loading
-        //effectuer la recherche
-        
-        _regionManager.RequestNavigate(Regions.MainRegion, nameof(MovieGridView), result =>
+        // Ajouter loading (ex: IsLoading = true;)
+        Console.WriteLine("Loading...");
+
+        try
         {
-            if (result.Result is true)
+            var films = await _filmService.AdvancedSearchAsync("Witness for the Prosecution", 1950, 1960, "Crime", "",
+                "",
+                "English", 1);
+            
+            _regionManager.RequestNavigate(Regions.MainRegion, nameof(MovieGridView), result =>
             {
-                //remove loading
-            }
-        });
+                if (result.Result is true)
+                {
+                    //remove loading
+                    Console.WriteLine("Films found:");
+                    foreach (var film in films)
+                    {
+                        Console.WriteLine($"Title: {film}");
+                    }
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            // Gérer les erreurs (ex: afficher un message d'erreur)
+            Console.WriteLine("An error occured");
+            Console.WriteLine(ex.Message);
+            
+        }
+        finally
+        {
+            // Remove loading (ex: IsLoading = false;)
+            Console.WriteLine("Loading removed");
+        }
     }
 }
