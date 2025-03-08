@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.CompilerServices;
 
 namespace Webflix.Models
 {
@@ -8,17 +9,17 @@ namespace Webflix.Models
     {
         [Key]
         [Column("PAYSID")]
-        public int PaysId { get; set; }
+        public int? PaysId { get; set; }
         
         [Key]
         [Column("FILMID")]
-        public int FilmId { get; set; }
+        public int? FilmId { get; set; }
         
         // Navigation properties
-        [ForeignKey("PAYSID")]
+        [ForeignKey(nameof(PaysId))]
         public virtual Pays Pays { get; set; }
         
-        [ForeignKey("FILMID")]
+        [ForeignKey(nameof(FilmId))]
         public virtual Film Film { get; set; }
     }
 }

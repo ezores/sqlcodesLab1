@@ -71,6 +71,14 @@ public class MyDbContext : DbContext
             .HasMany(f => f.BandesAnnonces)
             .WithOne(ba => ba.Film)
             .HasForeignKey(ba => ba.FilmId);
+
+
+        modelBuilder.Entity<Film>()
+            .HasOne(e => e.Realisateur)
+            .WithMany(e => e.FilmsRealises)
+            .HasForeignKey(e => e.RealisateurId)
+            .IsRequired();
+        
         
         // Configure Client -> Abonnement relationship
         // Remove the explicit HasPrincipalKey for Abonnement

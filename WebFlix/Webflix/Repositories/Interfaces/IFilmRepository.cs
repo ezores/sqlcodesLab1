@@ -22,8 +22,8 @@ namespace Webflix.Repositories.Interfaces
         Task<IEnumerable<Film>> SearchByYearAsync(int year);
         Task<IEnumerable<Film>> SearchByCountryAsync(int countryId);
         Task<IEnumerable<Film>> SearchByLanguageAsync(string language);
-        Task<IEnumerable<Film>> SearchAdvancedAsync(string title, int? year, string genre, 
-            int? actorId, int? directorId, 
+        Task<IEnumerable<Film>> SearchAdvancedAsync(string title, int? minYear, int? maxYear,string genre, 
+            string actor, string director, 
             string language, int? countryId);
     }
 }

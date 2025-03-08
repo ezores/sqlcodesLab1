@@ -23,11 +23,11 @@ public class FilmService
     }
     
     public async Task<IEnumerable<Film>> AdvancedSearchAsync(
-        string title, int? year, string genre, 
-        int? actorId, int? directorId, 
+        string title, int? minYear, int? maxYear, string genre, 
+        string actor, string director, 
         string language, int? countryId)
     {
         return await _filmRepository.SearchAdvancedAsync(
-            title, year, genre, actorId, directorId, language, countryId);
+            title, minYear, maxYear,genre, actor, director, language, countryId);
     }
 }

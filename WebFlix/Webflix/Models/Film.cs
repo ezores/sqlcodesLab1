@@ -11,35 +11,35 @@ namespace Webflix.Models
     {
         [Key]
         [Column("FILMID")]
-        public int FilmId { get; set; }
+        public int? FilmId { get; set; }
         
         [Column("TITRE")]
         [StringLength(255)]
-        public string Titre { get; set; }
+        public string? Titre { get; set; }
         
         [Column("ANNEESORTIE")]
         public int? AnneeSortie { get; set; }
         
         [Column("LANGUEORIGINALE")]
         [StringLength(50)]
-        public string LangueOriginale { get; set; }
+        public string? LangueOriginale { get; set; }
         
         [Column("DUREEMINUTE")]
         public int? DureeMinute { get; set; }
         
         [Column("RESUME")]
         [StringLength(2083)]
-        public string Resume { get; set; }
+        public string? Resume { get; set; }
         
         [Column("AFFICHEURL")]
         [StringLength(2083)]
-        public string AfficheUrl { get; set; }
+        public string? AfficheUrl { get; set; }
         
         [Column("REALISATEURID")]
         public int? RealisateurId { get; set; }
         
         // Navigation properties
-        [ForeignKey("REALISATEURID")]
+        [ForeignKey(nameof(RealisateurId))]
         public virtual Personne Realisateur { get; set; }
         
         // Collections pour les relations many-to-many
