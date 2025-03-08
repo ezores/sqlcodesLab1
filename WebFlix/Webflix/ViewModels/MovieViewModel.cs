@@ -214,13 +214,13 @@ public class MovieViewModel : ViewModelBase
     
     private void ActorCommandExecute()
     {
+
+        var parameters = new NavigationParameters
+        {
+            { PERSON_PARAMETER, _movie?.Acteurs.FirstOrDefault(x => x.Nom == SelectedActor) }
+        };
         
-        // var parameters = new NavigationParameters
-        // {
-        //     { PERSON_PARAMETER, get la personne dans les actors avec SelectedActor }
-        // }
-        
-        _regionManager.RequestNavigate(Regions.MainRegion, nameof(PersonView)/*, parameters*/);
+        _regionManager.RequestNavigate(Regions.MainRegion, nameof(PersonView), parameters);
     }
     
     private void ScreenwriterCommandExecute()
