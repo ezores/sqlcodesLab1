@@ -19,21 +19,21 @@ public class App {
 
     public static void main(String[] args) {
         // Validate arguments
-        if (args.length < 3) {
-            System.out.println("Usage: java -jar your-app.jar <movies_xml_path> <clients_xml_path> <people_xml_path>");
-            System.exit(1);
-        }
+//        if (args.length < 3) {
+//            System.out.println("Usage: java -jar your-app.jar <movies_xml_path> <clients_xml_path> <people_xml_path>");
+//            System.exit(1);
+//        }
 
-        String moviesXmlPath = args[0];
-        String clientsXmlPath = args[1];
-        String peopleXmlPath = args[2];
+        String moviesXmlPath = "C:/Users/max97/OneDrive/Bureau/All/ETS/LOG/Session5/LOG660/Donnees/films_latin1.xml";
+        String clientsXmlPath = "C:/Users/max97/OneDrive/Bureau/All/ETS/LOG/Session5/LOG660/Donnees/clients_latin1.xml";
+        String peopleXmlPath = "C:/Users/max97/OneDrive/Bureau/All/ETS/LOG/Session5/LOG660/Donnees/personnes_latin1.xml";
 
         // Validate if files exist
         validateFile(moviesXmlPath, "Movies XML");
         validateFile(clientsXmlPath, "Clients XML");
         validateFile(peopleXmlPath, "People XML");
 
-        // Initialize XML Parser
+        // Initialize XML Parserj
         XmlParserService xmlParserService = new XmlParserService();
 
         // Parse XML files

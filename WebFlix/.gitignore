@@ -482,3 +482,17 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Ignore Rider settings and metadata
+.idea/
+*.DotSettings.user
+
+# Ignore build artifacts
+bin/
+obj/
+
+# Ignore Rider-generated NuGet files
+obj/**/*.nuget.dgspec.json
+obj/**/*.nuget.cache
+obj/**/*.packagespec.json
+obj/rider.project.*
