@@ -15,8 +15,6 @@ public partial class MovieGridView : UserControl
     public MovieGridView()
     {
         InitializeComponent();
-        
-        
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)

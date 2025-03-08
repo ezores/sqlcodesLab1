@@ -1,6 +1,7 @@
 ﻿using System.Reactive;
 using Prism.Regions;
 using ReactiveUI;
+using Webflix.Repositories.Interfaces;
 using Webflix.Resources;
 using Webflix.Views;
 
@@ -56,15 +57,14 @@ public class SearchViewModel : ViewModelBase
 
     private void SearchCommandExecute()
     {
-        // ajouter loading
-        //effectuer la recherche
         
-        _regionManager.RequestNavigate(Regions.MainRegion, nameof(MovieGridView), result =>
-        {
-            if (result.Result is true)
-            {
-                //remove loading
-            }
-        });
+        
+        //_regionManager.RequestNavigate(Regions.MainRegion, nameof(MovieGridView), result =>
+        //{
+        //    if (result.Result is true)
+        //    {
+        //        //remove loading
+        //    }
+        //});
     }
 }

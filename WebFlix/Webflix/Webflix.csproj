@@ -9,9 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Models\"/>
-        <AvaloniaResource Include="Assets\**"/>
-        <Folder Include="Services\" />
+        <Folder Include="Models\" />
+        <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,6 +25,7 @@
         </PackageReference>
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.3" />
         <PackageReference Include="NP.Ava.Visuals" Version="1.0.43" />
+        <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.60" />
         <PackageReference Include="Prism.Avalonia" Version="8.1.97.11073" />
         <PackageReference Include="Prism.DryIoc.Avalonia" Version="8.1.97.11073" />
     </ItemGroup>

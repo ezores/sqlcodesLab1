@@ -4,6 +4,7 @@ using Prism.Regions;
 using ReactiveUI;
 using Webflix.Resources;
 using Webflix.Views;
+using Webflix.Repositories.Interfaces;
 
 namespace Webflix.ViewModels;
 
