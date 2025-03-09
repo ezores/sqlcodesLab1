@@ -19,6 +19,6 @@ public class BandeAnnonce
     [StringLength(2048)]
     public string Url { get; set; }
     
-    [ForeignKey("FILMID")]
+    [ForeignKey(nameof(FilmId))]
     public virtual Film Film { get; set; }
 }

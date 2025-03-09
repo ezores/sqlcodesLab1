@@ -44,10 +44,7 @@ public class MyDbContext : DbContext
         // Configuration de la conversion pour l'enum StatutCopie
         modelBuilder.Entity<CopieFilm>()
             .Property(e => e.Statut)
-            .HasConversion(
-                v => v.ToString(),
-                v => (StatutCopie)Enum.Parse(typeof(StatutCopie), v)
-            );
+            .HasConversion<string>(); // Converts Enum to VARCHAR
             
         // Vous pouvez ajouter d'autres configurations spécifiques ici
         
@@ -65,7 +62,7 @@ public class MyDbContext : DbContext
             .HasKey(gf => new { gf.Genre, gf.FilmId });
             
         modelBuilder.Entity<Emprunt>()
-            .HasKey(e => new { e.CopieId, e.NomUsager });
+            .HasKey(e => new { e.CopieId, e.ClientId });
             
         // Configuration des relations
         modelBuilder.Entity<Film>()

@@ -48,13 +48,13 @@ namespace Webflix.Models.Entities
         public string CodeAbonnement { get; set; }
         
         // Navigation properties
-        [ForeignKey("ADRESSEID")]
+        [ForeignKey(nameof(AdresseId))]
         public virtual Adresse Adresse { get; set; }
         
-        [ForeignKey("CARTECREDITID")]
+        [ForeignKey(nameof(CarteCreditId))]
         public virtual CarteCredit CarteCredit { get; set; }
         
-        [ForeignKey("CODEABONNEMENT")]
+        [ForeignKey(nameof(CodeAbonnement))]
         public virtual Abonnement Abonnement { get; set; }
         
         // Collection pour les emprunts

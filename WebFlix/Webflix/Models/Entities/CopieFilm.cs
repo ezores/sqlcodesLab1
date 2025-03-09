@@ -6,8 +6,8 @@ namespace Webflix.Models.Entities
     // Définition de l'enum pour les statuts possibles
     public enum StatutCopie
     {
-        Disponible,
-        Prete
+        DISPONIBLE,
+        PRETE
     }
     
     [Table("COPIEFILM")]
@@ -26,7 +26,7 @@ namespace Webflix.Models.Entities
         [Column("STATUT")]
         public StatutCopie Statut { get; set; }
         
-        [ForeignKey("FILMID")]
+        [ForeignKey(nameof(FilmId))]
         public virtual Film Film { get; set; }
         
         public virtual Emprunt Emprunt { get; set; }

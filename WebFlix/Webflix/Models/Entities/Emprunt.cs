@@ -12,16 +12,19 @@ namespace Webflix.Models.Entities
         public int CopieId { get; set; }
         
         [Key]
-        [Column("NOMUSAGER")]
-        [StringLength(50)]
-        public string NomUsager { get; set; }
+        [Column("CLIENTID")]
+        public int ClientId { get; set; }
         
         [Required]
         [Column("DATEDEBUTEMPRUNT")]
         public DateTime DateDebutEmprunt { get; set; }
         
         // Navigation property
-        [ForeignKey("COPIEID")]
+        [ForeignKey(nameof(CopieId))]
         public virtual CopieFilm Copie { get; set; }
+        
+        // Navigation property
+        [ForeignKey(nameof(ClientId))]
+        public virtual Client Client { get; set; }
     }
 }

@@ -37,6 +37,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterScoped<IPersonneRepository, PersonneRepository>();
         containerRegistry.RegisterScoped<IEmployeRepository, EmployeRepository>();
         containerRegistry.RegisterScoped<IClientRepository, ClientRepository>();
+        containerRegistry.RegisterScoped<IRentalRepository, RentalRepository>();
         containerRegistry.RegisterScoped<IInformationRepository, InformationRepository>();
         
         // Services
