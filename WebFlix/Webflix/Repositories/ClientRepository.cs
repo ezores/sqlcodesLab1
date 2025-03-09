@@ -11,6 +11,7 @@ namespace Webflix.Repositories
     public class ClientRepository : IClientRepository
     {
         private readonly MyDbContext _context;
+        private  int _currentClientId;
         
         public ClientRepository(MyDbContext context)
         {
@@ -21,12 +22,19 @@ namespace Webflix.Repositories
         
         public async Task<Client> GetByIdAsync(int id)
         {
-            return await _context.Clients
+            var client = await _context.Clients
                 .Include(c => c.Adresse)
                 .Include(c => c.CarteCredit)
                 .Include(c => c.Abonnement)
                 .Include(c => c.Emprunts)
                 .FirstOrDefaultAsync(c => c.ClientId == id);
+
+            if (client == null)
+            {
+                throw new KeyNotFoundException($"Client with ID {id} not found.");
+            }
+
+            return client;
         }
         
         public async Task<Client> GetByEmailAsync(string email)
@@ -82,8 +90,19 @@ namespace Webflix.Repositories
                     CodeAbonnementTrimmed = c.CodeAbonnement != null ? c.CodeAbonnement.Trim() : null
                 })
                 .FirstOrDefaultAsync();
+
+            if (client != null)
+            {
+                _currentClientId = client.ClientId;
+            }
             
             return client != null; // Return true if a client was found, false otherwise
+        }
+
+        public async Task<Client> GetAuthenticatedClient()
+        {
+            var client = await GetByIdAsync(_currentClientId);
+            return client;
         }
         
         public async Task<IEnumerable<Emprunt>> GetActiveRentalsAsync(int clientId)
@@ -97,7 +116,7 @@ namespace Webflix.Repositories
             return await _context.Emprunts
                 .Include(e => e.Copie)
                     .ThenInclude(c => c.Film)
-                .Where(e => e.NomUsager == client.Courriel)
+                .Where(e => e.ClientId == client.ClientId)
                 .ToListAsync();
         }
         
@@ -135,7 +154,7 @@ namespace Webflix.Repositories
                 return 0;
                 
             return await _context.Emprunts
-                .CountAsync(e => e.NomUsager == client.Courriel);
+                .CountAsync(e => e.ClientId == client.ClientId);
         }
     }
 }

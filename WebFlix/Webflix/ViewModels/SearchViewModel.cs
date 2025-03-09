@@ -16,7 +16,6 @@ public class SearchViewModel : ViewModelBase
 {
     private readonly IRegionManager _regionManager;
     private readonly FilmService _filmService;
-    private readonly CopieFilmService _copieService;
     
     public string SearchString => "Search for a movie";
     public string TitleWatermark => "Title";
@@ -55,11 +54,10 @@ public class SearchViewModel : ViewModelBase
 
     public ReactiveCommand<Unit, Unit> SearchCommand { get; set; }
     
-    public SearchViewModel(IRegionManager regionManager, CopieFilmService copieService)
+    public SearchViewModel(IRegionManager regionManager, FilmService filmService)
     {
         _regionManager = regionManager;
-        // _filmService = filmService;
-        _copieService = copieService;
+        _filmService = filmService;
         SearchCommand = ReactiveCommand.Create(SearchCommandExecute);
     }
 
@@ -70,23 +68,21 @@ public class SearchViewModel : ViewModelBase
         
         try
         {
-            // var films = await _filmService.AdvancedSearchAsync("Witness for the Prosecution", 1950, 1960, "Crime", "",
-            //     "",
-            //     "English", 1);
-            await _copieService.RentMovie(93105,171684);
-           //await _copieService.ReturnMovie(120794,171684)
-            
+            //EXEMPLE
+            var films = await _filmService.AdvancedSearchAsync("Witness for the Prosecution", 1950, 1960, "Crime", "",
+                "",
+                "English", 1);
             
             _regionManager.RequestNavigate(Regions.MainRegion, nameof(MovieGridView), result =>
             {
                 if (result.Result is true)
                 {
-                    // //remove loading
-                    // Console.WriteLine("Films found:");
-                    // foreach (var film in films)
-                    // {
-                    //     Console.WriteLine($"Title: {film.Titre}");
-                    // }
+                    //remove loading
+                    Console.WriteLine("Films found:");
+                    foreach (var film in films)
+                    {
+                        Console.WriteLine($"Title: {film.Titre}");
+                    }
                     
                 }
             });

@@ -61,7 +61,7 @@ public class MyDbContext : DbContext
             .HasKey(gf => new { gf.Genre, gf.FilmId });
             
         modelBuilder.Entity<Emprunt>()
-            .HasKey(e => new { e.CopieId, e.NomUsager });
+            .HasKey(e => new { e.CopieId, e.ClientId });
             
         // Configuration des relations
         modelBuilder.Entity<Film>()

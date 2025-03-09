@@ -17,6 +17,7 @@ namespace Webflix.Repositories.Interfaces
         
         // Méthodes spécifiques pour les cas d'utilisation
         Task<bool> AuthenticateAsync(string email, string password);
+        Task<Client> GetAuthenticatedClient();
         Task<IEnumerable<Emprunt>> GetActiveRentalsAsync(int clientId);
         Task<bool> CanRentMoreFilmsAsync(int clientId);
         Task<int> GetMaxRentalsAllowedAsync(int clientId);

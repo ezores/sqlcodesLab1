@@ -20,11 +20,6 @@ public class CopieFilmService
         _rentalRepository = rentalRepository;
     }
     
-    //If dispo ET depasse pas nb max d'emprunt de son abonnement
-    //Add a copie to Emprunt avec la date
-    //Change statut de la copie
-    //PARAMS: Film, Copies, Client
-    //RETURN:
     public async Task RentMovie(int filmId, int clientId)
     {
 
@@ -39,7 +34,6 @@ public class CopieFilmService
         if (!availableCopies.Any())
         {
             Console.WriteLine("No available copies to rent.");
-            Console.WriteLine("There is" + availableCopies.Count());
             return;
         }
         
@@ -50,7 +44,7 @@ public class CopieFilmService
         
         Emprunt newRental = new Emprunt
         {
-            NomUsager = client.Courriel,
+            ClientId = client.ClientId,
             CopieId = selectedCopyId,
             DateDebutEmprunt = DateTime.UtcNow
         };
@@ -58,9 +52,7 @@ public class CopieFilmService
         Console.WriteLine($"Movie rented successfully: {selectedCopyId}" + " by " +  client.Courriel);
     }
     
-    //Au retour, emleve de emprunt
-    //Rechange pour statut dispo
-    public async void ReturnMovie(int filmId, int clientId)
+    public async Task ReturnMovie(int filmId, int clientId)
     {
         // Find the rental for this client and film
         Emprunt rental = await _rentalRepository.GetActiveRentalAsync(clientId, filmId);
@@ -77,6 +69,6 @@ public class CopieFilmService
         // Remove the rental record
         await _rentalRepository.DeleteAsync(rental);
 
-        Console.WriteLine($"Movie returned successfully: {rental.CopieId} by {rental.NomUsager}");
+        Console.WriteLine($"Movie returned successfully: {rental.CopieId} by {rental.ClientId}");
     }
 }

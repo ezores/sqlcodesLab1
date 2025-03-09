@@ -30,7 +30,7 @@ public class RentalRepository : IRentalRepository
     public async Task<Emprunt?> GetActiveRentalAsync(int clientId, int filmId)
     {
         return await _context.Emprunts
-            .Where(e => e.NomUsager == (from c in _context.Clients where c.ClientId == clientId select c.Courriel).FirstOrDefault()
+            .Where(e => e.ClientId == (from c in _context.Clients where c.ClientId == clientId select c.ClientId).FirstOrDefault()
                         && e.Copie.FilmId == filmId)
             .FirstOrDefaultAsync();
     }
