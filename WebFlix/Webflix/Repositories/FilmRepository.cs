@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NP.Utilities;
 using Webflix.Models;
 using Webflix.Models.Entities;
 using Webflix.Repositories.Interfaces;
@@ -132,9 +133,9 @@ namespace Webflix.Repositories
         }
         
         public async Task<IEnumerable<Film>> SearchAdvancedAsync(
-            string title, int? minYear, int? maxYear,string genre, 
-            string actor, string director, 
-            string language, int? countryId)
+            string? title, int? minYear, int? maxYear,string? genre, 
+            string? actor, string? director, 
+            string? language, string? country)
         {
             var query = _context.Films
             .Include(f => f.Realisateur)
@@ -146,27 +147,31 @@ namespace Webflix.Repositories
             .AsQueryable();
                 
             if (!string.IsNullOrEmpty(title))
-                query = query.Where(f => f.Titre.Contains(title));
-                
-            if (minYear.HasValue && maxYear.HasValue)
-                query = query.Where(f => f.AnneeSortie >= minYear.Value && f.AnneeSortie <= maxYear.Value);
-                
+                query = query.Where(f => (f.Titre ?? "").Contains(title));
+
+            if (minYear.HasValue)
+                query = query.Where(f => f.AnneeSortie >= minYear.Value);
+
+            if (maxYear.HasValue)
+                query = query.Where(f => f.AnneeSortie <= maxYear.Value);
+
             if (!string.IsNullOrEmpty(genre))
-                query = query.Where(f => f.GenresFilms.Any(gf => gf.Genre == genre));
-                
+                query = query.Where(f => f.GenresFilms.Any(gf => gf.Genre != null && gf.Genre == genre));
+
             if (!string.IsNullOrEmpty(actor))
-                query = query.Where(f => f.ActeursFilms.Any(af => af.Acteur.Nom.Contains(actor)));
-            
+                query = query.Where(f => f.ActeursFilms.Any(af => af.Acteur != null && af.Acteur.Nom != null && af.Acteur.Nom.Contains(actor)));
+
             if (!string.IsNullOrEmpty(director))
-                query = query.Where(f => f.Realisateur.Nom.Contains(director));
-                
+                query = query.Where(f => f.Realisateur != null && f.Realisateur.Nom != null && f.Realisateur.Nom.Contains(director));
+
             if (!string.IsNullOrEmpty(language))
-                query = query.Where(f => f.LangueOriginale == language);
-                
-            if (countryId.HasValue)
-                query = query.Where(f => f.PaysFilms.Any(pf => pf.PaysId == countryId.Value));
-                
+                query = query.Where(f => f.LangueOriginale != null && f.LangueOriginale == language);
+
+            if (!string.IsNullOrEmpty(country))
+                query = query.Where(f => f.PaysFilms.Any(pf => pf.Pays != null && pf.Pays.Nom != null && pf.Pays.Nom == country));
+
             return await query.ToListAsync();
+
         }
     }
 }

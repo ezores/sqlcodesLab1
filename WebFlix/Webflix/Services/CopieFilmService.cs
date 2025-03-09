@@ -20,24 +20,20 @@ public class CopieFilmService
         _clientRepository = clientRepository;
         _rentalRepository = rentalRepository;
     }
-    
-    public async Task RentMovie(int filmId, int clientId)
+
+
+    public async Task<bool> CheckIfCanRentMore(int clientId)
     {
-
-        if (await _clientRepository.CanRentMoreFilmsAsync(clientId) == false)
-        {
-            Console.WriteLine("Maximum rental for your subscription reached");
-            return;
-        }
-        
-        IEnumerable<CopieFilm> availableCopies = await _copieFilmRepository.GetAvailableCopiesAsync(filmId);
-
-        if (!availableCopies.Any())
-        {
-            Console.WriteLine("No available copies to rent.");
-            return;
-        }
-        
+        return await _clientRepository.CanRentMoreFilmsAsync(clientId);
+    }
+    
+    public async Task<IEnumerable<CopieFilm>> getAvailableCopies(int filmId)
+    {
+        return await _copieFilmRepository.GetAvailableCopiesAsync(filmId);
+    }
+    
+    public async Task RentMovie(IEnumerable<CopieFilm> availableCopies, int clientId)
+    {
         int selectedCopyId = availableCopies.First().CopieId;
         await _copieFilmRepository.UpdateStatusAsync(selectedCopyId, StatutCopie.PRETE);
 

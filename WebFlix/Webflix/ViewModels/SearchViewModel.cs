@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using Prism.Regions;
 using ReactiveUI;
+using Webflix.Models;
 using Webflix.Repositories.Interfaces;
 using Webflix.Resources;
 using Webflix.Views;
@@ -16,6 +18,7 @@ public class SearchViewModel : ViewModelBase
     
     private readonly IRegionManager _regionManager;
     private readonly IInformationRepository _informationRepository;
+    private readonly FilmService _filmService;
     
     public string SearchString => "Search for a movie";
     public string TitleWatermark => "Title";
@@ -109,10 +112,11 @@ public class SearchViewModel : ViewModelBase
 
     public ReactiveCommand<Unit, Unit> SearchCommand { get; set; }
     
-    public SearchViewModel(IRegionManager regionManager, IInformationRepository informationRepository)
+    public SearchViewModel(IRegionManager regionManager, IInformationRepository informationRepository, FilmService filmService)
     {
         _regionManager = regionManager;
         _informationRepository = informationRepository;
+        _filmService = filmService;
         
         SearchCommand = ReactiveCommand.Create(SearchCommandExecute);
     }
@@ -131,16 +135,15 @@ public class SearchViewModel : ViewModelBase
         Languages.AddRange(_informationRepository.GetAllLanguages());
     }
 
-    private void SearchCommandExecute()
+    private async void SearchCommandExecute()
     {
-        // var films = _filmRepository.SearchAdvanced(Title, MinYear, MaxYear, Director, Actor, Country, Language, Genre)
-        //
+        // var films = await _filmService.AdvancedSearchAsync(Title, MinYear, MaxYear, Genre, Actor, Director, Language, Country);
+        var films = await _filmService.AdvancedSearchAsync("Witness for the Prosecution", 1950, 1960, "", "", "", "", "");
+        var parameters = new NavigationParameters
+        {
+            { FILMS_PARAMETER, new MovieSearchResult { Films = films } }
+        };
         
-        // var parameters = new NavigationParameters
-        // {
-        //     { FILMS_PARAMETER, new MovieSearchResult { Films = films } }
-        // };
-        
-        _regionManager.RequestNavigate(Regions.MainRegion, nameof(MovieGridView)/*, parameters*/);
+        _regionManager.RequestNavigate(Regions.MainRegion, nameof(MovieGridView), parameters);
     }
 }

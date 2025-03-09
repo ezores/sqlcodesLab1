@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -10,7 +11,10 @@ using Prism.Regions;
 using ReactiveUI;
 using Webflix.Helpers;
 using Webflix.Models.Entities;
+using Webflix.Repositories;
+using Webflix.Repositories.Interfaces;
 using Webflix.Resources;
+using Webflix.Services;
 using Webflix.Views;
 
 namespace Webflix.ViewModels;
@@ -20,6 +24,8 @@ public class MovieViewModel : ViewModelBase
     public static readonly string PERSON_PARAMETER = "person-parameter";
     
     private readonly IRegionManager _regionManager;
+    private readonly CopieFilmService _copieFilmService;
+    private readonly IClientRepository _clientRepository;
 
     private Film? _movie;
     
@@ -113,7 +119,8 @@ public class MovieViewModel : ViewModelBase
 
     private string _selectedActor;
     private string _selectedTrailer;
-    
+
+    private bool _rented = false;
     public string SelectedActor
     {
         get => _selectedActor;
@@ -131,9 +138,11 @@ public class MovieViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> TrailerCommand { get; set; }
     public ReactiveCommand<Unit, Unit> RentCommand { get; set; }
     
-    public MovieViewModel(IRegionManager regionManager)
+    public MovieViewModel(IRegionManager regionManager, CopieFilmService copieFilmService, IClientRepository clientRepository)
     {
         _regionManager = regionManager;
+        _copieFilmService = copieFilmService;
+        _clientRepository = clientRepository;
         
         ActorCommand = ReactiveCommand.Create(ActorCommandExecute);
         DirectorCommand = ReactiveCommand.Create(DirectorCommandExecute);
@@ -186,16 +195,30 @@ public class MovieViewModel : ViewModelBase
     private async Task RentCommandExecute()
     {
         // Logique pour rent le movie avec le LocationService
-
-        //if (rented) {
-        await ShowMessage("The movie was rented succesfully");
-        // }
-        //else if (nombre de location max atteinte) {
-        //await ShowMessage("Maximum location reached");
-        //}
-        //else if (no copies left){
-        //await ShowMessage("All the copies for this movie are currently rented");
-        //}
+        Client client = await _clientRepository.GetAuthenticatedClient();
+        var filmId = _movie.FilmId ?? default(int);
+        IEnumerable<CopieFilm> availableCopies = await _copieFilmService.getAvailableCopies(filmId);
+        if (!_rented)
+        {
+            if (await _clientRepository.CanRentMoreFilmsAsync(client.ClientId)) {
+                await ShowMessage("Maximum location reached");
+            }
+            else if (availableCopies.Any()){
+                await ShowMessage("All the copies for this movie are currently rented");
+            }
+            else
+            {
+                await _copieFilmService.RentMovie(availableCopies, client.ClientId);
+                _rented = true;
+                await ShowMessage("The movie was rented succesfully");
+            }
+        }
+        else if (_rented)
+        {
+            await _copieFilmService.ReturnMovie(filmId, client.ClientId);
+            _rented = false;
+        }
+       
     }
 
     private async Task ShowMessage(string message)
