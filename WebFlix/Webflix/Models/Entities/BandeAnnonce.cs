@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Webflix.Models;
+namespace Webflix.Models.Entities;
 
 [Table("BANDEANNONCE")]
 public class BandeAnnonce

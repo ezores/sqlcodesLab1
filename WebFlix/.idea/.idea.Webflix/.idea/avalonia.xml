@@ -8,6 +8,8 @@
         <entry key="Webflix/Views/MovieGridView.axaml" value="Webflix/Webflix.csproj" />
         <entry key="Webflix/Views/MovieThumbnailView.axaml" value="Webflix/Webflix.csproj" />
         <entry key="Webflix/Views/MovieTileView.axaml" value="Webflix/Webflix.csproj" />
+        <entry key="Webflix/Views/MovieView.axaml" value="Webflix/Webflix.csproj" />
+        <entry key="Webflix/Views/PersonView.axaml" value="Webflix/Webflix.csproj" />
         <entry key="Webflix/Views/SearchView.axaml" value="Webflix/Webflix.csproj" />
         <entry key="Webflix/Views/SerchView.axaml" value="Webflix/Webflix.csproj" />
       </map>

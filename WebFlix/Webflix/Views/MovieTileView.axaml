@@ -15,7 +15,7 @@
         <Image Grid.Row="0"
                Grid.Column="1"
                Margin="0,15"
-               Source="/Assets/spiderman.jpg"
+               Source="{Binding MoviePoster}"
                Height="200"/>
         <TextBlock Grid.Row="1"
                    Grid.Column="1"

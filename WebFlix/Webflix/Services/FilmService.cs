@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Webflix.Models;
+using Webflix.Models.Entities;
 using Webflix.Repositories.Interfaces;
+
+namespace Webflix.Services;
 
 public class FilmService
 {

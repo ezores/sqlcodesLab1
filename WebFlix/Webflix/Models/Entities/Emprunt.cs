@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Webflix.Models
+namespace Webflix.Models.Entities
 {
     [Table("EMPRUNT")]
     public class Emprunt

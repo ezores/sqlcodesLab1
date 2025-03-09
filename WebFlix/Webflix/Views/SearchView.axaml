@@ -83,7 +83,9 @@
                               FontSize="16"
                               PlaceholderText="{Binding GenrePlaceholder}"
                               Background="#000438"
-                              x:Name="GenreComboBox"/>
+                              x:Name="GenreComboBox"
+                              SelectedItem="{Binding Genre, Mode=OneWayToSource}"
+                              ItemsSource="{Binding Genres}"/>
                     <ComboBox Grid.Row="2"
                               Grid.Column="2"
                               HorizontalAlignment="Stretch"
@@ -93,7 +95,9 @@
                               FontSize="16"
                               PlaceholderText="{Binding CountryPlaceholder}"
                               Background="#000438"
-                              x:Name="CountryComboBox"/>
+                              x:Name="CountryComboBox"
+                              SelectedItem="{Binding Country, Mode=OneWayToSource}"
+                              ItemsSource="{Binding Countries}"/>
                     <ComboBox Grid.Row="3"
                               Grid.Column="2"
                               HorizontalAlignment="Stretch"
@@ -103,7 +107,9 @@
                               FontSize="16"
                               PlaceholderText="{Binding LanguagePlaceholder}"
                               Background="#000438"
-                              x:Name="LanguageComboBox"/>
+                              x:Name="LanguageComboBox"
+                              SelectedItem="{Binding Language, Mode=OneWayToSource}"
+                              ItemsSource="{Binding Languages}"/>
                     <StackPanel Grid.Row="4"
                                 Grid.Column="1">
                         <TextBlock Text="From:"
@@ -116,7 +122,10 @@
                                     Background="#000438"
                                     Height="55"
                                     Margin="10"
-                                    x:Name="FromDatePricker"/>
+                                    x:Name="FromDatePricker"
+                                    DayVisible="False"
+                                    MonthVisible="False"
+                                    SelectedDate="{Binding MinDate, Mode=OneWayToSource}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="4"
                                 Grid.Column="2">
@@ -130,7 +139,10 @@
                                     Background="#000438"
                                     Height="55"
                                     Margin="10"
-                                    x:Name="ToDatePicker"/>
+                                    x:Name="ToDatePicker"
+                                    DayVisible="False"
+                                    MonthVisible="False"
+                                    SelectedDate="{Binding MaxDate, Mode=OneWayToSource}"/>
                     </StackPanel>
                     <Button Grid.Row="5"
                             Grid.Column="1"

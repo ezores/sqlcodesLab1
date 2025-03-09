@@ -1,6 +1,8 @@
+using System.Net.Http;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Microsoft.Extensions.DependencyInjection;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Regions;
@@ -8,6 +10,7 @@ using Webflix.Repositories;
 using Webflix.Repositories.Interfaces;
 using Webflix.Resources;
 using Webflix.Services;
+using Webflix.Services.Interfaces;
 using Webflix.ViewModels;
 using Webflix.Views;
 
@@ -34,9 +37,27 @@ public partial class App : PrismApplication
         containerRegistry.RegisterScoped<IPersonneRepository, PersonneRepository>();
         containerRegistry.RegisterScoped<IEmployeRepository, EmployeRepository>();
         containerRegistry.RegisterScoped<IClientRepository, ClientRepository>();
+        containerRegistry.RegisterScoped<IInformationRepository, InformationRepository>();
+        
+        // Services
         containerRegistry.RegisterScoped<IAuthenticationService, AuthenticationService>();
+        
+        // Navigation
         containerRegistry.RegisterForNavigation<SearchView, SearchViewModel>();
         containerRegistry.RegisterForNavigation<MovieGridView, MovieGridViewModel>();
+        containerRegistry.RegisterForNavigation<MovieView, MovieViewModel>();
+        containerRegistry.RegisterForNavigation<PersonView, PersonViewModel>();
+        AddHttpClientFactory(containerRegistry);
+    }
+
+    private void AddHttpClientFactory(IContainerRegistry containerRegistry)
+    {
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddHttpClient();
+        var provider = serviceCollection.BuildServiceProvider();
+
+        containerRegistry.RegisterInstance(typeof(IHttpClientFactory),
+            provider.GetRequiredService<IHttpClientFactory>());
     }
     
     protected override AvaloniaObject CreateShell() => Container.Resolve<MainWindow>();

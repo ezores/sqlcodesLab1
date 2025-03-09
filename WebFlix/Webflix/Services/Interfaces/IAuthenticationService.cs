@@ -1,7 +1,7 @@
 // IAuthenticationService.cs
 using System.Threading.Tasks;
 
-namespace Webflix.Repositories.Interfaces
+namespace Webflix.Services.Interfaces
 {
     public interface IAuthenticationService
     {

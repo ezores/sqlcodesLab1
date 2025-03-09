@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Webflix.Repositories.Interfaces;
+using Webflix.Services.Interfaces;
 
 namespace Webflix.Services
 {
