@@ -83,6 +83,7 @@ public class PersonViewModel(IHttpClientFactory clientFactory) : ViewModelBase
     {
         if (string.IsNullOrEmpty(_person?.Photo))
         {
+            PersonPhoto = null;
             return;
         }
     
