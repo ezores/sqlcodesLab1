@@ -10,11 +10,11 @@ namespace Webflix.Models.Entities
     {
         [Key]
         [Column("SCENARISTEID")]
-        public int ScenaristeId { get; set; }
+        public int? ScenaristeId { get; set; }
         
         [Column("NOM")]
         [StringLength(50)]
-        public string Nom { get; set; }
+        public string? Nom { get; set; }
         
         // Navigation properties pour les relations
         public virtual ICollection<ScenaristeFilm> ScenaristesFilms { get; set; }

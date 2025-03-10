@@ -11,11 +11,11 @@ namespace Webflix.Models.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("PAYSID")]
-        public int PaysId { get; set; }
+        public int? PaysId { get; set; }
         
         [Column("NOM")]
         [StringLength(255)]
-        public string Nom { get; set; }
+        public string? Nom { get; set; }
         
         // Navigation properties pour les relations
         public virtual ICollection<PaysFilm> PaysFilms { get; set; }

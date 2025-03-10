@@ -138,6 +138,8 @@ public class MovieViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> TrailerCommand { get; set; }
     public ReactiveCommand<Unit, Unit> RentCommand { get; set; }
     
+    public ReactiveCommand<Unit, Unit> ReturnCommand { get; set; }
+    
     public MovieViewModel(IRegionManager regionManager, CopieFilmService copieFilmService, IClientRepository clientRepository)
     {
         _regionManager = regionManager;
@@ -148,6 +150,7 @@ public class MovieViewModel : ViewModelBase
         DirectorCommand = ReactiveCommand.Create(DirectorCommandExecute);
         TrailerCommand = ReactiveCommand.Create(NavigateToTrailerView);
         RentCommand = ReactiveCommand.CreateFromTask(RentCommandExecute);
+        ReturnCommand = ReactiveCommand.CreateFromTask(ReturnCommandExecute);
     }
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
@@ -196,29 +199,30 @@ public class MovieViewModel : ViewModelBase
     {
         // Logique pour rent le movie avec le LocationService
         Client client = await _clientRepository.GetAuthenticatedClient();
-        var filmId = _movie.FilmId ?? default(int);
+        int filmId = _movie.FilmId;
         IEnumerable<CopieFilm> availableCopies = await _copieFilmService.getAvailableCopies(filmId);
-        if (!_rented)
-        {
-            if (await _clientRepository.CanRentMoreFilmsAsync(client.ClientId)) {
-                await ShowMessage("Maximum location reached");
-            }
-            else if (availableCopies.Any()){
-                await ShowMessage("All the copies for this movie are currently rented");
-            }
-            else
-            {
-                await _copieFilmService.RentMovie(availableCopies, client.ClientId);
-                _rented = true;
-                await ShowMessage("The movie was rented succesfully");
-            }
+
+        if (!await _clientRepository.CanRentMoreFilmsAsync(client.ClientId)) {
+            await ShowMessage("Maximum location reached");
         }
-        else if (_rented)
-        {
-            await _copieFilmService.ReturnMovie(filmId, client.ClientId);
-            _rented = false;
+        else if (!availableCopies.Any()){
+            await ShowMessage("All the copies for this movie are currently rented");
         }
-       
+        else
+        {
+            await _copieFilmService.RentMovie(availableCopies, client.ClientId);
+            _rented = true;
+            await ShowMessage("The movie was rented succesfully");
+        }
+    }
+    private async Task ReturnCommandExecute()
+    {
+        // Logique pour rent le movie avec le LocationService
+        Client client = await _clientRepository.GetAuthenticatedClient();
+        int filmId = _movie.FilmId;
+        IEnumerable<CopieFilm> availableCopies = await _copieFilmService.getAvailableCopies(filmId);
+        await _copieFilmService.ReturnMovie(filmId, client.ClientId);
+        await ShowMessage("The movie was returned succesfully");
     }
 
     private async Task ShowMessage(string message)

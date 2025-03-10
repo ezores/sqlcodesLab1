@@ -60,6 +60,9 @@ public class MyDbContext : DbContext
             
         modelBuilder.Entity<GenreFilm>()
             .HasKey(gf => new { gf.Genre, gf.FilmId });
+        
+        modelBuilder.Entity<BandeAnnonce>()
+            .HasKey(b => new { b.Id, b.FilmId });
             
         modelBuilder.Entity<Emprunt>()
             .HasKey(e => new { e.CopieId, e.ClientId });

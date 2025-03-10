@@ -13,11 +13,11 @@ public class BandeAnnonce
     
     [Required]
     [Column("FILMID")]
-    public int FilmId { get; set; }
+    public int? FilmId { get; set; }
     
     [Column("URL")]
     [StringLength(2048)]
-    public string Url { get; set; }
+    public string? Url { get; set; }
     
     [ForeignKey(nameof(FilmId))]
     public virtual Film Film { get; set; }

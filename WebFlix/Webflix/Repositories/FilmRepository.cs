@@ -138,16 +138,18 @@ namespace Webflix.Repositories
             string? language, string? country)
         {
             var query = _context.Films
-            .Include(f => f.Realisateur)
-            .Include(f => f.ActeursFilms)
-                .ThenInclude(f => f.Acteur)
-            .Include(f => f.GenresFilms)
-            .Include(f => f.PaysFilms)
-                .ThenInclude(f => f.Pays)
-            .AsQueryable();
-                
+                .Include(f => f.Realisateur)
+                .Include(f => f.ActeursFilms).ThenInclude(af => af.Acteur)
+                .Include(f => f.GenresFilms)
+                .Include(f => f.PaysFilms).ThenInclude(pf => pf.Pays)
+                .Include(f => f.ScenaristesFilms).ThenInclude(sf => sf.Scenariste)
+                .Include(f => f.BandesAnnonces)
+                .AsQueryable()
+                .AsSplitQuery();
+
+            // Apply filters only if values are provided to avoid unnecessary query modifications
             if (!string.IsNullOrEmpty(title))
-                query = query.Where(f => (f.Titre ?? "").Contains(title));
+                query = query.Where(f => f.Titre != null && f.Titre.Contains(title));
 
             if (minYear.HasValue)
                 query = query.Where(f => f.AnneeSortie >= minYear.Value);

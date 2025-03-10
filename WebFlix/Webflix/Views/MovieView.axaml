@@ -103,16 +103,20 @@
                              x:Name="ScreenWriterList"/>
                     
                     <TextBlock Text="Actors"/>
-                    <ListBox ItemsSource="{Binding Actors}"
-                             Margin="0,0,0,10"
-                             x:Name="ActorList"
-                             SelectedItem="{Binding SelectedActor}"/>
+                    <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
+                        <ListBox ItemsSource="{Binding Actors}"
+                                 Margin="0,0,0,10"
+                                 x:Name="ActorList"
+                                 SelectedItem="{Binding SelectedActor}"/>
+                    </ScrollViewer>
                     
                     <TextBlock Text="Trailers:"/>
-                    <ListBox ItemsSource="{Binding Trailers}"
-                             Margin="0,0,0,10"
-                             x:Name="TrailerList"
-                             SelectedItem="{Binding SelectedTrailer}"/>
+                    <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
+                        <ListBox ItemsSource="{Binding Trailers}"
+                                 Margin="0,0,0,10"
+                                 x:Name="TrailerList"
+                                 SelectedItem="{Binding SelectedTrailer}"/>
+                    </ScrollViewer>
                 </StackPanel>
             </Grid>
             <Button Grid.Column="1"
@@ -129,6 +133,20 @@
                     Content="Rent"
                     FontSize="20"
                     Command="{Binding RentCommand}"/>
+            <Button Grid.Column="1"
+                    Grid.ColumnSpan="3"
+                    Grid.Row="2"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    Background="#c11119"
+                    Height="60"
+                    Width="100"
+                    CornerRadius="8"
+                    Content="Return"
+                    FontSize="20"
+                    Command="{Binding ReturnCommand}"/>
         </Grid>
     </Grid>
 </UserControl>

@@ -11,25 +11,25 @@ namespace Webflix.Models.Entities
     {
         [Key]
         [Column("PERSONNEID")]
-        public int PersonneId { get; set; }
+        public int? PersonneId { get; set; }
         
         [Column("NOM")]
         [StringLength(100)]
-        public string Nom { get; set; }
+        public string? Nom { get; set; }
         
         [Column("DATENAISSANCE")]
         public DateTime? DateNaissance { get; set; }
         
         [Column("LIEUNAISSANCE")]
         [StringLength(100)]
-        public string LieuNaissance { get; set; }
+        public string? LieuNaissance { get; set; }
         
         [Column("PHOTO")]
         [StringLength(2048)]
-        public string Photo { get; set; }
+        public string? Photo { get; set; }
         
         [Column("BIOGRAPHIE")]
-        public string Biographie { get; set; }
+        public string? Biographie { get; set; }
         
         // Navigation properties pour les relations
         

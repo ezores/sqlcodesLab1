@@ -106,9 +106,9 @@ public class SearchViewModel : ViewModelBase
         get => _languages;
         set => this.RaiseAndSetIfChanged(ref _languages, value);
     }
-    
-    private int? MinYear { get; set; }
-    private int? MaxYear { get; set; }
+
+    private int? MinYear { get; set; } = 0;
+    private int? MaxYear { get; set; } = 3000;
 
     public ReactiveCommand<Unit, Unit> SearchCommand { get; set; }
     
@@ -137,8 +137,7 @@ public class SearchViewModel : ViewModelBase
 
     private async void SearchCommandExecute()
     {
-        // var films = await _filmService.AdvancedSearchAsync(Title, MinYear, MaxYear, Genre, Actor, Director, Language, Country);
-        var films = await _filmService.AdvancedSearchAsync("Witness for the Prosecution", 1950, 1960, "", "", "", "", "");
+        var films = await _filmService.AdvancedSearchAsync(Title, MinYear, MaxYear, Genre, Actor, Director, Language, Country);
         var parameters = new NavigationParameters
         {
             { FILMS_PARAMETER, new MovieSearchResult { Films = films } }

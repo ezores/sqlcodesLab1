@@ -10,7 +10,7 @@ namespace Webflix.Models.Entities
     {
         [Key]
         [Column("FILMID")]
-        public int? FilmId { get; set; }
+        public int FilmId { get; set; }
         
         [Column("TITRE")]
         [StringLength(255)]

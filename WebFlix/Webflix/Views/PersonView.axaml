@@ -26,10 +26,6 @@
             <Image Grid.Row="1"
                    Grid.Column="1"
                    Source="{Binding PersonPhoto}"/>
-            <TextBlock Grid.Row="1"
-                       Grid.Column="2"
-                       Text="{Binding Biography}"
-                       TextWrapping="Wrap"/>
             <StackPanel Grid.Row="1"
                         Grid.Column="2"
                         Orientation="Vertical"
@@ -47,6 +43,11 @@
                 <TextBlock Text="Lieu de naissance:"/>
                 <TextBlock Text="{Binding BirthPlace}"
                            Margin="0,0,0,10"/>
+                <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
+                    <TextBlock
+                               Text="{Binding Biography}"
+                               TextWrapping="Wrap"/>
+                </ScrollViewer>
             </StackPanel>
         </Grid>
     </Grid>
