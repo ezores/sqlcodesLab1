@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Reactive;
+using System.Threading.Tasks;
+using Avalonia.Threading;
 using Prism.Events;
 using Prism.Regions;
 using ReactiveUI;
+using Webflix.Events;
 using Webflix.Resources;
 using Webflix.Views;
 using Webflix.Services;
@@ -17,8 +20,12 @@ public class MainWindowViewModel : ViewModelBase
 {
     private readonly IRegionManager _regionManager;
     private readonly IAuthenticationService _authService;
+    private readonly IEventAggregator _eventAggregator;
     
     private string _errorMessage = string.Empty;
+
+    public Action? ShowLoading;
+    public Action? HideLoading;
 
     public string ErrorMessage
     {
@@ -46,13 +53,17 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> SignInCommand { get; set; }
     public ReactiveCommand<Unit, Unit> LogOutCommand { get; set; }
 
-    public MainWindowViewModel(IRegionManager regionManager, IAuthenticationService authService)
+    public MainWindowViewModel(IRegionManager regionManager, IAuthenticationService authService, IEventAggregator eventAggregator)
     {
         _regionManager = regionManager;
         _authService = authService;
+        _eventAggregator = eventAggregator;
         //_clientRepository = clientRepository;
         SignInCommand = ReactiveCommand.Create(SignInCommandExecute);
         LogOutCommand = ReactiveCommand.Create(LogOutCommandExecute);
+
+        _eventAggregator.GetEvent<ShowLoadingEvent>().Subscribe(() => ShowLoading?.Invoke());
+        _eventAggregator.GetEvent<HideLoadingEvent>().Subscribe(() => HideLoading?.Invoke());
     }
 
     public override void OnNavigatedTo(NavigationContext navigationContext)

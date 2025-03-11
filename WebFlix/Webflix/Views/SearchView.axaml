@@ -125,7 +125,8 @@
                                     x:Name="FromDatePricker"
                                     DayVisible="False"
                                     MonthVisible="False"
-                                    SelectedDate="{Binding MinDate, Mode=OneWayToSource}"/>
+                                    SelectedDate="{Binding MinDate, Mode=OneWayToSource}"
+                                    MaxYear="{Binding MaxYearDatePicker}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="4"
                                 Grid.Column="2">
@@ -142,7 +143,8 @@
                                     x:Name="ToDatePicker"
                                     DayVisible="False"
                                     MonthVisible="False"
-                                    SelectedDate="{Binding MaxDate, Mode=OneWayToSource}"/>
+                                    SelectedDate="{Binding MaxDate, Mode=OneWayToSource}"
+                                    MaxYear="{Binding MaxYearDatePicker}"/>
                     </StackPanel>
                     <Button Grid.Row="5"
                             Grid.Column="1"
@@ -167,7 +169,8 @@
                             CornerRadius="8"
                             Background="#c11119"
                             Content="{Binding SearchButtonString}"
-                            Command="{Binding SearchCommand}"/>
+                            Command="{Binding SearchCommand}"
+                            IsEnabled="{Binding IsSearchButtonEnabled}"/>
                 </Grid>
                 
             </Border>

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:regions="http://prismlibrary.com/"
+        xmlns:li="clr-namespace:Webflix.Views"
         mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
         x:Class="Webflix.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -124,6 +125,11 @@
                         Grid.RowSpan="2"
                         Grid.ColumnSpan="3"
                         regions:RegionManager.RegionName="main-region" Margin="10,0,10,0"/>
+        
+        <li:LoadingOverlay Grid.Row="0"
+                           Grid.Column="0"
+                           Grid.RowSpan="3"
+                           Grid.ColumnSpan="3"/>
     </Grid>
 
 </Window>

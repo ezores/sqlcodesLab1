@@ -38,7 +38,7 @@ public class MovieViewModel : ViewModelBase
     private string _description = string.Empty;
     private ObservableCollection<string> _countries = new();
     private ObservableCollection<string> _genres = new();
-    private ObservableCollection<string> _screenwriters = new();
+    private ObservableCollection<string?> _screenwriters = new();
     private ObservableCollection<string> _actors = new();
     private ObservableCollection<string> _trailers = new();
     
@@ -98,7 +98,7 @@ public class MovieViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _genres, value);
     }
 
-    public ObservableCollection<string> Screenwriters
+    public ObservableCollection<string?> Screenwriters
     {
         get => _screenwriters;
         set => this.RaiseAndSetIfChanged(ref _screenwriters, value);

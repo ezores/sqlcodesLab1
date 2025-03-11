@@ -2,8 +2,13 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Threading.Tasks;
+using MsBox.Avalonia;
+using NP.Utilities;
+using Prism.Events;
 using Prism.Regions;
 using ReactiveUI;
+using Webflix.Events;
 using Webflix.Models;
 using Webflix.Repositories.Interfaces;
 using Webflix.Resources;
@@ -17,6 +22,7 @@ public class SearchViewModel : ViewModelBase
     public static readonly string FILMS_PARAMETER = "film-parameter";
     
     private readonly IRegionManager _regionManager;
+    private readonly IEventAggregator _eventAggregator;
     private readonly IInformationRepository _informationRepository;
     private readonly FilmService _filmService;
     
@@ -30,6 +36,14 @@ public class SearchViewModel : ViewModelBase
     public string LanguagePlaceholder => "Language";
     public string ClearButtonString => "Clear";
     public string SearchButtonString => "Search";
+
+    private bool _isSearchButtonEnabled = true;
+
+    public bool IsSearchButtonEnabled
+    {
+        get => _isSearchButtonEnabled;
+        set => this.RaiseAndSetIfChanged(ref _isSearchButtonEnabled, value);
+    }
 
     private string _title = string.Empty;
 
@@ -78,6 +92,8 @@ public class SearchViewModel : ViewModelBase
             MaxYear = MaxDate?.Year;
         }
     }
+    
+    public DateTimeOffset MaxYearDatePicker => DateTimeOffset.Now;
 
     public string Country { get; set; } = string.Empty;
     public string Genre { get; set; } = string.Empty;
@@ -112,9 +128,10 @@ public class SearchViewModel : ViewModelBase
 
     public ReactiveCommand<Unit, Unit> SearchCommand { get; set; }
     
-    public SearchViewModel(IRegionManager regionManager, IInformationRepository informationRepository, FilmService filmService)
+    public SearchViewModel(IRegionManager regionManager, IInformationRepository informationRepository, FilmService filmService, IEventAggregator eventAggregator)
     {
         _regionManager = regionManager;
+        _eventAggregator = eventAggregator;
         _informationRepository = informationRepository;
         _filmService = filmService;
         
@@ -137,12 +154,36 @@ public class SearchViewModel : ViewModelBase
 
     private async void SearchCommandExecute()
     {
-        var films = await _filmService.AdvancedSearchAsync(Title, MinYear, MaxYear, Genre, Actor, Director, Language, Country);
+        _eventAggregator.GetEvent<ShowLoadingEvent>().Publish();
+        IsSearchButtonEnabled = false;
+        
+        var films = (await _filmService.AdvancedSearchAsync(Title, MinYear, MaxYear, Genre, Actor, Director, Language, Country)).ToList();
+
+        if (!films.Any())
+        {
+            IsSearchButtonEnabled = true;
+            _eventAggregator.GetEvent<HideLoadingEvent>().Publish();
+
+            await ShowMessageAsync("The search yielded no results.");
+
+            return;
+        }
+        
         var parameters = new NavigationParameters
         {
             { FILMS_PARAMETER, new MovieSearchResult { Films = films } }
         };
         
-        _regionManager.RequestNavigate(Regions.MainRegion, nameof(MovieGridView), parameters);
+        _regionManager.RequestNavigate(Regions.MainRegion, nameof(MovieGridView), result =>
+        {
+            _eventAggregator.GetEvent<HideLoadingEvent>().Publish();
+            IsSearchButtonEnabled = true;
+        }, parameters);
+    }
+    
+    private async Task ShowMessageAsync(string message)
+    {
+        var box = MessageBoxManager.GetMessageBoxStandard("Webflix", message);
+        await box.ShowWindowAsync();
     }
 }

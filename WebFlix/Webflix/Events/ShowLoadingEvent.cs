@@ -2,7 +2,7 @@
 
 namespace Webflix.Events;
 
-public class OnLoginEvent : PubSubEvent
+public class ShowLoadingEvent : PubSubEvent
 {
     
 }

@@ -149,7 +149,7 @@ namespace Webflix.Repositories
 
             // Apply filters only if values are provided to avoid unnecessary query modifications
             if (!string.IsNullOrEmpty(title))
-                query = query.Where(f => f.Titre != null && f.Titre.Contains(title));
+                query = query.Where(f => f.Titre != null && f.Titre.ToLower().Contains(title.ToLower()));
 
             if (minYear.HasValue)
                 query = query.Where(f => f.AnneeSortie >= minYear.Value);
@@ -161,10 +161,10 @@ namespace Webflix.Repositories
                 query = query.Where(f => f.GenresFilms.Any(gf => gf.Genre != null && gf.Genre == genre));
 
             if (!string.IsNullOrEmpty(actor))
-                query = query.Where(f => f.ActeursFilms.Any(af => af.Acteur != null && af.Acteur.Nom != null && af.Acteur.Nom.Contains(actor)));
+                query = query.Where(f => f.ActeursFilms.Any(af => af.Acteur != null && af.Acteur.Nom != null && af.Acteur.Nom.ToLower().Contains(actor.ToLower())));
 
             if (!string.IsNullOrEmpty(director))
-                query = query.Where(f => f.Realisateur != null && f.Realisateur.Nom != null && f.Realisateur.Nom.Contains(director));
+                query = query.Where(f => f.Realisateur != null && f.Realisateur.Nom != null && f.Realisateur.Nom.ToLower().Contains(director.ToLower()));
 
             if (!string.IsNullOrEmpty(language))
                 query = query.Where(f => f.LangueOriginale != null && f.LangueOriginale == language);

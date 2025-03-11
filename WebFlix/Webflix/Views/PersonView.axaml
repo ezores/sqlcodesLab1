@@ -26,6 +26,10 @@
             <Image Grid.Row="1"
                    Grid.Column="1"
                    Source="{Binding PersonPhoto}"/>
+            <Image Grid.Row="1"
+                   Grid.Column="1"
+                   Source="../Assets/question-mark.jpg"
+                   IsVisible="{Binding PersonPhoto, Converter={x:Static ObjectConverters.IsNull}}"/>
             <StackPanel Grid.Row="1"
                         Grid.Column="2"
                         Orientation="Vertical"

@@ -26,6 +26,10 @@
             <Image Grid.Row="1"
                    Grid.Column="1"
                    Source="{Binding MoviePoster}"/>
+            <Image Grid.Row="1"
+                   Grid.Column="1"
+                   Source="../Assets/question-mark.jpg"
+                   IsVisible="{Binding MoviePoster, Converter={x:Static ObjectConverters.IsNull}}"/>
             <TextBlock Grid.Row="2"
                        Grid.Column="1"
                        Height="200"
@@ -44,15 +48,18 @@
                             Spacing="5"
                             Orientation="Vertical"
                             Margin="10">
-                    <TextBlock Text="Title:"/>
+                    <TextBlock Text="Title:"
+                               FontWeight="Bold"/>
                     <TextBlock Text="{Binding Title}"
                                Margin="0,0,0,10"/>
                     
-                    <TextBlock Text="Release Year:"/>
+                    <TextBlock Text="Release Year:"
+                               FontWeight="Bold"/>
                     <TextBlock Text="{Binding ReleaseYear}"
                                Margin="0,0,0,10"/>
                     
-                    <TextBlock Text="Countries:"/>
+                    <TextBlock Text="Countries:"
+                               FontWeight="Bold"/>
                     <ItemsControl ItemsSource="{Binding Countries}"
                              Margin="0,0,0,10">
                         <ItemsControl.ItemTemplate>
@@ -63,15 +70,18 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                     
-                    <TextBlock Text="Original Language:"/>
+                    <TextBlock Text="Original Language:"
+                               FontWeight="Bold"/>
                     <TextBlock Text="{Binding Language}"
                                Margin="0,0,0,10"/>
                     
-                    <TextBlock Text="Movie length (minutes):"/>
+                    <TextBlock Text="Movie length (in minutes):"
+                               FontWeight="Bold"/>
                     <TextBlock Text="{Binding MovieLength}"
                                Margin="0,0,0,10"/>
                     
-                    <TextBlock Text="Genres:"/>
+                    <TextBlock Text="Genres:"
+                               FontWeight="Bold"/>
                     <ItemsControl ItemsSource="{Binding Genres}"
                              Margin="0,0,0,10">
                         <ItemsControl.ItemTemplate>
@@ -88,21 +98,24 @@
                             Spacing="5"
                             Orientation="Vertical"
                             Margin="10">
-                    <TextBlock Text="Director:"/>
+                    <TextBlock Text="Director:"
+                               FontWeight="Bold"/>
                     <Button Content="{Binding DirectorName}"
                                Margin="0,0,0,10"
-                               HorizontalContentAlignment="Center"
+                               HorizontalContentAlignment="Left"
                                VerticalContentAlignment="Center"
                                Height="40"
                                Width="200"
                                Command="{Binding DirectorCommand}"/>
                     
-                    <TextBlock Text="Screenwriters:"/>
+                    <TextBlock Text="Screenwriters:"
+                               FontWeight="Bold"/>
                     <ItemsControl ItemsSource="{Binding Screenwriters}"
                              Margin="0,0,0,10"
                              x:Name="ScreenWriterList"/>
                     
-                    <TextBlock Text="Actors"/>
+                    <TextBlock Text="Actors"
+                               FontWeight="Bold"/>
                     <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
                         <ListBox ItemsSource="{Binding Actors}"
                                  Margin="0,0,0,10"
@@ -110,7 +123,8 @@
                                  SelectedItem="{Binding SelectedActor}"/>
                     </ScrollViewer>
                     
-                    <TextBlock Text="Trailers:"/>
+                    <TextBlock Text="Trailers:"
+                               FontWeight="Bold"/>
                     <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
                         <ListBox ItemsSource="{Binding Trailers}"
                                  Margin="0,0,0,10"
@@ -120,10 +134,9 @@
                 </StackPanel>
             </Grid>
             <Button Grid.Column="1"
-                    Grid.ColumnSpan="2"
                     Grid.Row="2"
                     VerticalAlignment="Bottom"
-                    HorizontalAlignment="Center"
+                    HorizontalAlignment="Right"
                     VerticalContentAlignment="Center"
                     HorizontalContentAlignment="Center"
                     Background="#c11119"
@@ -132,12 +145,12 @@
                     CornerRadius="8"
                     Content="Rent"
                     FontSize="20"
-                    Command="{Binding RentCommand}"/>
-            <Button Grid.Column="1"
-                    Grid.ColumnSpan="3"
+                    Command="{Binding RentCommand}"
+                    Margin="15,0"/>
+            <Button Grid.Column="2"
                     Grid.Row="2"
                     VerticalAlignment="Bottom"
-                    HorizontalAlignment="Center"
+                    HorizontalAlignment="Left"
                     VerticalContentAlignment="Center"
                     HorizontalContentAlignment="Center"
                     Background="#c11119"
@@ -146,7 +159,8 @@
                     CornerRadius="8"
                     Content="Return"
                     FontSize="20"
-                    Command="{Binding ReturnCommand}"/>
+                    Command="{Binding ReturnCommand}"
+                    Margin="15,0"/>
         </Grid>
     </Grid>
 </UserControl>

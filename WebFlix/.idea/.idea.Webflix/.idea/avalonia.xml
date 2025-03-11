@@ -4,6 +4,7 @@
     <option name="projectPerEditor">
       <map>
         <entry key="Webflix/App.axaml" value="Webflix/Webflix.csproj" />
+        <entry key="Webflix/Views/LoadingOverlay.axaml" value="Webflix/Webflix.csproj" />
         <entry key="Webflix/Views/MainWindow.axaml" value="Webflix/Webflix.csproj" />
         <entry key="Webflix/Views/MovieGridView.axaml" value="Webflix/Webflix.csproj" />
         <entry key="Webflix/Views/MovieThumbnailView.axaml" value="Webflix/Webflix.csproj" />
