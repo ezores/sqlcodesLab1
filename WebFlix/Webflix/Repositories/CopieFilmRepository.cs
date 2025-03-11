@@ -11,18 +11,21 @@ namespace Webflix.Repositories
 {
     public class CopieFilmRepository : ICopieFilmRepository
     {
-        private readonly MyDbContext _context;
+        private IDbContextFactory<MyDbContext> _contextFactory;
+        // private readonly MyDbContext context;
         
-        public CopieFilmRepository(MyDbContext context)
+        public CopieFilmRepository(IDbContextFactory<MyDbContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
         
         // Implémentation des méthodes CRUD de base
         
         public async Task<CopieFilm> GetByIdAsync(int id)
         {
-            return await _context.CopiesFilm
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            return await context.CopiesFilm
                 .Include(c => c.Film)
                 .Include(c => c.Emprunt)
                 .FirstOrDefaultAsync(c => c.CopieId == id);
@@ -30,14 +33,18 @@ namespace Webflix.Repositories
         
         public async Task<IEnumerable<CopieFilm>> GetAllAsync()
         {
-            return await _context.CopiesFilm
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            return await context.CopiesFilm
                 .Include(c => c.Film)
                 .ToListAsync();
         }
         
         public async Task<IEnumerable<CopieFilm>> GetByFilmIdAsync(string filmId)
         {
-            return await _context.CopiesFilm
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            return await context.CopiesFilm
                 .Include(c => c.Film)
                 .Where(c => Equals(c.FilmId, filmId))
                 .ToListAsync();
@@ -45,34 +52,39 @@ namespace Webflix.Repositories
         
         public async Task AddAsync(CopieFilm copieFilm)
         {
-            await _context.CopiesFilm.AddAsync(copieFilm);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            await context.CopiesFilm.AddAsync(copieFilm);
         }
         
-        public Task UpdateAsync(CopieFilm copieFilm)
+        public async Task UpdateAsync(CopieFilm copieFilm)
         {
-            _context.Entry(copieFilm).State = EntityState.Modified;
-            return Task.CompletedTask;
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            context.Entry(copieFilm).State = EntityState.Modified;
+            await context.SaveChangesAsync();
         }
         
         public async Task DeleteAsync(int id)
         {
-            var copieFilm = await _context.CopiesFilm.FindAsync(id);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            var copieFilm = await context.CopiesFilm.FindAsync(id);
             if (copieFilm != null)
             {
-                _context.CopiesFilm.Remove(copieFilm);
+                context.CopiesFilm.Remove(copieFilm);
             }
-        }
-        
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
+
+            await context.SaveChangesAsync();
         }
         
         // Implémentation des méthodes spécifiques
         
         public async Task<IEnumerable<CopieFilm>> GetAvailableCopiesAsync(int filmId)
         {
-            return await _context.CopiesFilm
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            return await context.CopiesFilm
                 .Include(c => c.Film)
                 .Where(c => Equals(c.FilmId, filmId) && c.Statut == StatutCopie.DISPONIBLE)
                 .ToListAsync();
@@ -80,18 +92,22 @@ namespace Webflix.Repositories
         
         public async Task<bool> IsAvailableAsync(int copieId)
         {
-            var copie = await _context.CopiesFilm.FindAsync(copieId);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            var copie = await context.CopiesFilm.FindAsync(copieId);
             return copie != null && copie.Statut == StatutCopie.DISPONIBLE;
         }
         
         public async Task<bool> UpdateStatusAsync(int copieId, StatutCopie statut)
         {
-            var copie = await _context.CopiesFilm.FindAsync(copieId);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            var copie = await context.CopiesFilm.FindAsync(copieId);
             if (copie == null)
                 return false;
                 
             copie.Statut = statut;
-            await SaveChangesAsync();
+            await context.SaveChangesAsync();
             return true;
         }
     }

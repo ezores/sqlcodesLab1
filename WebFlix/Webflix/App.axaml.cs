@@ -1,8 +1,11 @@
+using System;
 using System.Net.Http;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Regions;
@@ -49,6 +52,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterForNavigation<MovieView, MovieViewModel>();
         containerRegistry.RegisterForNavigation<PersonView, PersonViewModel>();
         AddHttpClientFactory(containerRegistry);
+        AddDbContextFactory(containerRegistry);
     }
 
     private void AddHttpClientFactory(IContainerRegistry containerRegistry)
@@ -59,6 +63,21 @@ public partial class App : PrismApplication
 
         containerRegistry.RegisterInstance(typeof(IHttpClientFactory),
             provider.GetRequiredService<IHttpClientFactory>());
+    }
+    
+    private void AddDbContextFactory(IContainerRegistry containerRegistry)
+    {
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddDbContextFactory<MyDbContext>(options => options.UseOracle("User Id=EQUIPE201;Password=yy3IR1VP;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=bdlog660.ens.ad.etsmtl.ca)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCLPDB.ens.ad.etsmtl.ca)))")
+            .LogTo(message => Console.WriteLine($"EF Core: {message}"),  // Log SQL and parameters
+                new[] { DbLoggerCategory.Database.Command.Name },
+                LogLevel.Debug
+            )
+            .EnableSensitiveDataLogging());
+        var provider = serviceCollection.BuildServiceProvider();
+
+        containerRegistry.RegisterInstance(typeof(IDbContextFactory<MyDbContext>),
+            provider.GetRequiredService<IDbContextFactory<MyDbContext>>());
     }
     
     protected override AvaloniaObject CreateShell() => Container.Resolve<MainWindow>();

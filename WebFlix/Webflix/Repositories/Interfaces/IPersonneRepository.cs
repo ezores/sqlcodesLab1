@@ -13,7 +13,6 @@ namespace Webflix.Repositories.Interfaces
         Task AddAsync(Personne personne);
         Task UpdateAsync(Personne personne);
         Task DeleteAsync(int id);
-        Task SaveChangesAsync();
         
         // Méthodes spécifiques pour les cas d'utilisation
         Task<IEnumerable<Personne>> SearchByNameAsync(string name);

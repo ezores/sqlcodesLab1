@@ -25,19 +25,22 @@ public class MyDbContext : DbContext
     public DbSet<PaysFilm> PaysFilms { get; set; }
     public DbSet<ScenaristeFilm> ScenaristesFilms { get; set; }
     
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
     {
-        optionsBuilder.UseOracle("User Id=EQUIPE201;Password=yy3IR1VP;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=bdlog660.ens.ad.etsmtl.ca)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCLPDB.ens.ad.etsmtl.ca)))")
-            //.LogTo(Console.WriteLine)
-            .LogTo(
-                message => Console.WriteLine($"EF Core: {message}"),  // Log SQL and parameters
-                new[] { DbLoggerCategory.Database.Command.Name },
-                LogLevel.Debug
-            )
-            .EnableSensitiveDataLogging();
-        
     }
+    
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    // {
+    //     optionsBuilder.UseOracle("User Id=EQUIPE201;Password=yy3IR1VP;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=bdlog660.ens.ad.etsmtl.ca)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCLPDB.ens.ad.etsmtl.ca)))")
+    //         //.LogTo(Console.WriteLine)
+    //         .LogTo(
+    //             message => Console.WriteLine($"EF Core: {message}"),  // Log SQL and parameters
+    //             new[] { DbLoggerCategory.Database.Command.Name },
+    //             LogLevel.Debug
+    //         )
+    //         .EnableSensitiveDataLogging();
+    //     
+    // }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

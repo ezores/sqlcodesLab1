@@ -14,7 +14,6 @@ namespace Webflix.Repositories.Interfaces
         Task AddAsync(Client client);
         Task UpdateAsync(Client client);
         Task DeleteAsync(int id);
-        Task SaveChangesAsync();
         
         // Méthodes spécifiques pour les cas d'utilisation
         Task<bool> AuthenticateAsync(string email, string password);

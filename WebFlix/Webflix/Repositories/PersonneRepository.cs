@@ -11,18 +11,21 @@ namespace Webflix.Repositories
 {
     public class PersonneRepository : IPersonneRepository
     {
-        private readonly MyDbContext _context;
+        // private readonly MyDbContext context;
+        private readonly IDbContextFactory<MyDbContext> _contextFactory;
         
-        public PersonneRepository(MyDbContext context)
+        public PersonneRepository(IDbContextFactory<MyDbContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
         
         // Implémentation des méthodes CRUD de base
         
         public async Task<Personne> GetByIdAsync(int id)
         {
-            return await _context.Personnes
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            return await context.Personnes
                 .Include(p => p.FilmsCommeActeur)
                     .ThenInclude(af => af.Film)
                 .Include(p => p.FilmsRealises)
@@ -31,32 +34,39 @@ namespace Webflix.Repositories
         
         public async Task<IEnumerable<Personne>> GetAllAsync()
         {
-            return await _context.Personnes.ToListAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            return await context.Personnes.ToListAsync();
         }
         
         public async Task AddAsync(Personne personne)
         {
-            await _context.Personnes.AddAsync(personne);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            await context.Personnes.AddAsync(personne);
+
+            await context.SaveChangesAsync();
         }
         
-        public Task UpdateAsync(Personne personne)
+        public async Task UpdateAsync(Personne personne)
         {
-            _context.Entry(personne).State = EntityState.Modified;
-            return Task.CompletedTask;
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            context.Entry(personne).State = EntityState.Modified;
+            await context.SaveChangesAsync();
         }
         
         public async Task DeleteAsync(int id)
         {
-            var personne = await _context.Personnes.FindAsync(id);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            var personne = await context.Personnes.FindAsync(id);
             if (personne != null)
             {
-                _context.Personnes.Remove(personne);
+                context.Personnes.Remove(personne);
             }
-        }
-        
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
+
+            await context.SaveChangesAsync();
         }
         
         // Implémentation des méthodes spécifiques
@@ -64,16 +74,22 @@ namespace Webflix.Repositories
         public async Task<IEnumerable<Personne>> SearchByNameAsync(string name)
         {
             if (string.IsNullOrEmpty(name))
+            {
                 return await GetAllAsync();
+            }
                 
-            return await _context.Personnes
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            return await context.Personnes
                 .Where(p => p.Nom.Contains(name))
                 .ToListAsync();
         }
         
         public async Task<IEnumerable<Personne>> GetActorsByFilmIdAsync(int filmId)
         {
-            return await _context.ActeursFilms
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            return await context.ActeursFilms
                 .Where(af => af.FilmId == filmId)
                 .Select(af => af.Acteur)
                 .ToListAsync();
@@ -81,7 +97,9 @@ namespace Webflix.Repositories
         
         public async Task<IEnumerable<Film>> GetFilmsByActorIdAsync(int actorId)
         {
-            return await _context.ActeursFilms
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            return await context.ActeursFilms
                 .Where(af => af.ActeurId == actorId)
                 .Select(af => af.Film)
                 .ToListAsync();
@@ -89,7 +107,9 @@ namespace Webflix.Repositories
         
         public async Task<IEnumerable<Film>> GetFilmsByDirectorIdAsync(int directorId)
         {
-            return await _context.Films
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            return await context.Films
                 .Where(f => f.RealisateurId == directorId)
                 .ToListAsync();
         }

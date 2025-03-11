@@ -11,19 +11,22 @@ namespace Webflix.Repositories
 {
     public class ClientRepository : IClientRepository
     {
-        private readonly MyDbContext _context;
+        //private readonly MyDbContext context;
+        private IDbContextFactory<MyDbContext> _contextFactory;
         private  int _currentClientId;
         
-        public ClientRepository(MyDbContext context)
+        public ClientRepository(IDbContextFactory<MyDbContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
         
         // Implémentation des méthodes CRUD de base
         
         public async Task<Client> GetByIdAsync(int id)
         {
-            var client = await _context.Clients
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            var client = await context.Clients
                 .Include(c => c.Adresse)
                 .Include(c => c.CarteCredit)
                 .Include(c => c.Abonnement)
@@ -40,48 +43,62 @@ namespace Webflix.Repositories
         
         public async Task<Client> GetByEmailAsync(string email)
         {
-            return await _context.Clients
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var client = await context.Clients
                 .Include(c => c.Abonnement)
                 .FirstOrDefaultAsync(c => c.Courriel == email);
+            return client;
         }
         
         public async Task<IEnumerable<Client>> GetAllAsync()
         {
-            return await _context.Clients
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            var clients = await context.Clients
                 .Include(c => c.Abonnement)
                 .ToListAsync();
+
+            return clients;
         }
         
         public async Task AddAsync(Client client)
         {
-            await _context.Clients.AddAsync(client);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            await context.Clients.AddAsync(client);
+            await context.SaveChangesAsync();
         }
         
-        public Task UpdateAsync(Client client)
+        public async Task UpdateAsync(Client client)
         {
-            _context.Entry(client).State = EntityState.Modified;
-            return Task.CompletedTask;
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            context.Entry(client).State = EntityState.Modified;
+
+            await context.SaveChangesAsync();
         }
         
         public async Task DeleteAsync(int id)
         {
-            var client = await _context.Clients.FindAsync(id);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            var client = await context.Clients.FindAsync(id);
             if (client != null)
             {
-                _context.Clients.Remove(client);
+                context.Clients.Remove(client);
             }
-        }
-        
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
+
+            await context.SaveChangesAsync();
         }
         
         // Implémentation des méthodes spécifiques
         
         public async Task<bool> AuthenticateAsync(string email, string password)
         {
-            var client = await _context.Clients
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            var client = await context.Clients
                 .Where(c => c.Courriel == email && c.MotDePasse == password)
                 .Select(c => new
                 {
@@ -108,22 +125,28 @@ namespace Webflix.Repositories
         
         public async Task<IEnumerable<Emprunt>> GetActiveRentalsAsync(int clientId)
         {
-            var client = await _context.Clients
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            var client = await context.Clients
                 .FirstOrDefaultAsync(c => c.ClientId == clientId);
                 
             if (client == null)
                 return new List<Emprunt>();
-                
-            return await _context.Emprunts
+
+            var emprunts = await context.Emprunts
                 .Include(e => e.Copie)
-                    .ThenInclude(c => c.Film)
+                .ThenInclude(c => c.Film)
                 .Where(e => e.ClientId == client.ClientId)
                 .ToListAsync();
+            
+            return emprunts;
         }
         
         public async Task<bool> CanRentMoreFilmsAsync(int clientId)
         {
-            var client = await _context.Clients
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            var client = await context.Clients
                 .Include(c => c.Abonnement)
                 .FirstOrDefaultAsync(c => c.ClientId == clientId);
                 
@@ -136,7 +159,9 @@ namespace Webflix.Repositories
         
         public async Task<int> GetMaxRentalsAllowedAsync(int clientId)
         {
-            var client = await _context.Clients
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            var client = await context.Clients
                 .Include(c => c.Abonnement)
                 .FirstOrDefaultAsync(c => c.ClientId == clientId);
                 
@@ -148,14 +173,18 @@ namespace Webflix.Repositories
         
         public async Task<int> GetCurrentRentalsCountAsync(int clientId)
         {
-            var client = await _context.Clients
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            
+            var client = await context.Clients
                 .FirstOrDefaultAsync(c => c.ClientId == clientId);
                 
             if (client == null)
                 return 0;
-                
-            return await _context.Emprunts
+
+            var count = await context.Emprunts
                 .CountAsync(e => e.ClientId == client.ClientId);
+            
+            return count;
         }
     }
 }

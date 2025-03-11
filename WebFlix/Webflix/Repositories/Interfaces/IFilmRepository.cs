@@ -13,7 +13,6 @@ namespace Webflix.Repositories.Interfaces
         Task AddAsync(Film film);
         Task UpdateAsync(Film film);
         Task DeleteAsync(int id);
-        Task SaveChangesAsync();
         
         // Méthodes spécifiques pour les cas d'utilisation
         Task<IEnumerable<Film>> SearchByTitleAsync(string title);

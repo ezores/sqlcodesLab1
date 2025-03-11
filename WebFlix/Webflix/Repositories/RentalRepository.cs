@@ -9,29 +9,35 @@ namespace Webflix.Repositories;
 
 public class RentalRepository : IRentalRepository
 {
-    private readonly MyDbContext _context;
-    
-    public RentalRepository(MyDbContext context)
+    // private readonly MyDbContext _context;
+    private readonly IDbContextFactory<MyDbContext> _contextFactory;
+    public RentalRepository(IDbContextFactory<MyDbContext> contextFactory)
     {
-        _context = context;
+        _contextFactory = contextFactory;
     }
     
     public async Task AddAsync(Emprunt emprunt)
     {
-        _context.Emprunts.Add(emprunt);
-        await _context.SaveChangesAsync();
+        await using var context = await _contextFactory.CreateDbContextAsync();
+        
+        context.Emprunts.Add(emprunt);
+        await context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Emprunt emprunt)
     {
-        _context.Emprunts.Remove(emprunt);
-        await _context.SaveChangesAsync();
+        await using var context = await _contextFactory.CreateDbContextAsync();
+        
+        context.Emprunts.Remove(emprunt);
+        await context.SaveChangesAsync();
     }
     
     public async Task<Emprunt?> GetActiveRentalAsync(int clientId, int filmId)
     {
-        return await _context.Emprunts
-            .Where(e => e.ClientId == (from c in _context.Clients where c.ClientId == clientId select c.ClientId).FirstOrDefault()
+        await using var context = await _contextFactory.CreateDbContextAsync();
+        
+        return await context.Emprunts
+            .Where(e => e.ClientId == (from c in context.Clients where c.ClientId == clientId select c.ClientId).FirstOrDefault()
                         && e.Copie.FilmId == filmId)
             .FirstOrDefaultAsync();
     }
