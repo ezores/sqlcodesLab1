@@ -30,14 +30,43 @@
                    Grid.Column="1"
                    Source="../Assets/question-mark.jpg"
                    IsVisible="{Binding MoviePoster, Converter={x:Static ObjectConverters.IsNull}}"/>
-            <TextBlock Grid.Row="2"
-                       Grid.Column="1"
-                       Height="200"
-                       HorizontalAlignment="Stretch"
-                       Margin="10,0"
-                       Text="{Binding Description}"
-                       TextWrapping="Wrap"
-                       TextAlignment="Center"/>
+            <Grid Grid.Row="2"
+                  Grid.Column="1"
+                  RowDefinitions="1*,1*,1*,7*">
+                <TextBlock Grid.Row="0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="Rating: 3.89/5"/>
+                <TextBlock Grid.Row="1"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="You Might Also Enjoy:"/>
+                <ListBox Grid.Row="2" 
+                    ItemsSource="{Binding Recommendations}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    x:Name="RecommendationList"
+                    SelectedItem="{Binding SelectedRecommendation}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            <!-- <TextBlock Grid.Row="2" -->
+            <!--            Grid.Column="1" -->
+            <!--            Height="200" -->
+            <!--            HorizontalAlignment="Stretch" -->
+            <!--            Margin="10,0" -->
+            <!--            Text="{Binding Description}" -->
+            <!--            TextWrapping="Wrap" -->
+            <!--            TextAlignment="Center"/> -->
             <Grid Grid.Row="1"
                   Grid.RowSpan="2"
                   Grid.Column="2"

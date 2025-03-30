@@ -12,14 +12,16 @@ namespace Webflix.Repositories
 {
     public class FilmRepository : IFilmRepository
     {
-        // private readonly MyDbContext context;
         private IDbContextFactory<MyDbContext> _contextFactory;
-        public FilmRepository(IDbContextFactory<MyDbContext> contextFactory)
+        private readonly IMovieCorrelationRepository _movieCorrelationRepository;
+        private readonly IMovieRatingRepository _movieRatingRepository;
+        
+        public FilmRepository(IDbContextFactory<MyDbContext> contextFactory, IMovieCorrelationRepository movieCorrelationRepository, IMovieRatingRepository movieRatingRepository)
         {
             _contextFactory = contextFactory;
+            _movieCorrelationRepository = movieCorrelationRepository;
+            _movieRatingRepository = movieRatingRepository;
         }
-        
-        // Implémentation des méthodes CRUD de base
         
         public async Task<Film> GetByIdAsync(int id)
         {
@@ -200,6 +202,47 @@ namespace Webflix.Repositories
 
             return await query.ToListAsync();
 
+        }
+
+        public double? GetMovieRating(int filmId) => _movieRatingRepository.GetFilmRating(GetFakeIdByMovieId(filmId));
+
+        public IEnumerable<Film> GetRecommendations(int filmId)
+        {
+            var recIds = _movieCorrelationRepository.GetRecommendations(GetFakeIdByMovieId(filmId));
+            List<Film> recommendations = [];
+
+            foreach (var id in recIds)
+            {
+                if (GetMovieByFakeId(id) is { } movie)
+                {
+                    recommendations.Add(movie);
+                }
+            }
+
+            return recommendations;
+        }
+
+        private Film? GetMovieByFakeId(int fakeId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            
+            var query = context.Films
+                .Include(f => f.Realisateur)
+                .Include(f => f.ActeursFilms).ThenInclude(af => af.Acteur)
+                .Include(f => f.GenresFilms)
+                .Include(f => f.PaysFilms).ThenInclude(pf => pf.Pays)
+                .Include(f => f.ScenaristesFilms).ThenInclude(sf => sf.Scenariste)
+                .Include(f => f.BandesAnnonces)
+                .AsQueryable()
+                .AsSplitQuery();
+            
+            return query.OrderBy(x => x.FilmId).Skip(fakeId - 1).FirstOrDefault();
+        }
+
+        private int GetFakeIdByMovieId(int movieId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            return context.Films.Count(x => x.FilmId < movieId) + 1;
         }
     }
 }

@@ -18,8 +18,6 @@ namespace Webflix.Repositories
             _context = context;
         }
         
-        // Implémentation des méthodes CRUD de base
-        
         public async Task<Employe> GetByMatriculeAsync(string matricule)
         {
             return await _context.Employes

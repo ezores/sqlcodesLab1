@@ -11,7 +11,6 @@ namespace Webflix.Repositories
 {
     public class ClientRepository : IClientRepository
     {
-        //private readonly MyDbContext context;
         private IDbContextFactory<MyDbContext> _contextFactory;
         private  int _currentClientId;
         
@@ -19,8 +18,6 @@ namespace Webflix.Repositories
         {
             _contextFactory = contextFactory;
         }
-        
-        // Implémentation des méthodes CRUD de base
         
         public async Task<Client> GetByIdAsync(int id)
         {

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
@@ -10,6 +12,7 @@ using MsBox.Avalonia;
 using Prism.Regions;
 using ReactiveUI;
 using Webflix.Helpers;
+using Webflix.Models;
 using Webflix.Models.Entities;
 using Webflix.Repositories;
 using Webflix.Repositories.Interfaces;
@@ -22,10 +25,14 @@ namespace Webflix.ViewModels;
 public class MovieViewModel : ViewModelBase
 {
     public static readonly string PERSON_PARAMETER = "person-parameter";
+    public static readonly string IS_RECOMMENDATION_PARAM = "is-recommendation";
     
     private readonly IRegionManager _regionManager;
     private readonly CopieFilmService _copieFilmService;
     private readonly IClientRepository _clientRepository;
+    private readonly IFilmRepository _filmRepository;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private List<Film> _movieRecommendations = [];
 
     private Film? _movie;
     
@@ -36,11 +43,13 @@ public class MovieViewModel : ViewModelBase
     private string _movieLength = string.Empty;
     private string _directorName = string.Empty;
     private string _description = string.Empty;
+    private double _rating;
     private ObservableCollection<string> _countries = new();
     private ObservableCollection<string> _genres = new();
     private ObservableCollection<string?> _screenwriters = new();
     private ObservableCollection<string> _actors = new();
     private ObservableCollection<string> _trailers = new();
+    private ObservableCollection<string> _recommendations = new();
     
     private Bitmap? _moviePoster;
 
@@ -86,6 +95,16 @@ public class MovieViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _description, value);
     }
 
+    public double Rating
+    {
+        get => _rating;
+        set
+        {
+            _rating = Math.Round(value, 2);
+            this.RaisePropertyChanged();
+        }
+    }
+    
     public ObservableCollection<string> Countries
     {
         get => _countries;
@@ -115,10 +134,17 @@ public class MovieViewModel : ViewModelBase
         get => _trailers;
         set => this.RaiseAndSetIfChanged(ref _trailers, value);
     }
+
+    public ObservableCollection<string> Recommendations
+    {
+        get => _recommendations;
+        set => this.RaiseAndSetIfChanged(ref _recommendations, value);
+    }
     #endregion
 
     private string _selectedActor;
     private string _selectedTrailer;
+    private string _selectedRecommendation;
 
     private bool _rented = false;
     public string SelectedActor
@@ -132,7 +158,14 @@ public class MovieViewModel : ViewModelBase
         get => _selectedTrailer;
         set => this.RaiseAndSetIfChanged(ref _selectedTrailer, value);
     }
+
+    public string SelectedRecommendation
+    {
+        get => _selectedRecommendation;
+        set => this.RaiseAndSetIfChanged(ref _selectedRecommendation, value);
+    }
     
+    public ReactiveCommand<Unit, Unit> RecommendationCommand { get; set; }
     public ReactiveCommand<Unit, Unit> ActorCommand { get; set; }
     public ReactiveCommand<Unit, Unit> DirectorCommand { get; set; }
     public ReactiveCommand<Unit, Unit> TrailerCommand { get; set; }
@@ -140,17 +173,24 @@ public class MovieViewModel : ViewModelBase
     
     public ReactiveCommand<Unit, Unit> ReturnCommand { get; set; }
     
-    public MovieViewModel(IRegionManager regionManager, CopieFilmService copieFilmService, IClientRepository clientRepository)
+    public MovieViewModel(IRegionManager regionManager, 
+        CopieFilmService copieFilmService, 
+        IClientRepository clientRepository,
+        IFilmRepository filmRepository,
+        IHttpClientFactory httpClientFactory)
     {
         _regionManager = regionManager;
         _copieFilmService = copieFilmService;
         _clientRepository = clientRepository;
+        _filmRepository = filmRepository;
+        _httpClientFactory = httpClientFactory;
         
         ActorCommand = ReactiveCommand.Create(ActorCommandExecute);
         DirectorCommand = ReactiveCommand.Create(DirectorCommandExecute);
         TrailerCommand = ReactiveCommand.Create(NavigateToTrailerView);
         RentCommand = ReactiveCommand.CreateFromTask(RentCommandExecute);
         ReturnCommand = ReactiveCommand.CreateFromTask(ReturnCommandExecute);
+        RecommendationCommand = ReactiveCommand.Create(RecommendationCommandExecute);
     }
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
@@ -160,14 +200,20 @@ public class MovieViewModel : ViewModelBase
         if (navigationContext.Parameters[MovieGridViewModel.MOVIE_PARAMETER] is Film movie)
         {
             _movie = movie;
+            Rating = _filmRepository.GetMovieRating(_movie.FilmId) ?? 0;
         }
         
         if (navigationContext.Parameters[MovieGridViewModel.POSTER_PARAMETER] is Bitmap poster)
         {
             MoviePoster = poster;
         }
+        else if (navigationContext.Parameters[IS_RECOMMENDATION_PARAM] is true)
+        {
+            _ = LoadMoviePosterAsync();
+        }
         
         InitView();
+        SetRecommendations();
     }
 
     private void InitView()
@@ -181,7 +227,7 @@ public class MovieViewModel : ViewModelBase
         Title = _movie.Titre;
         ReleaseYear = _movie.AnneeSortie is null ? "Unknown" : $"{_movie.AnneeSortie}";
         Countries.Clear();
-        Countries.AddRange(_movie.Pays.Select(x => x.Nom));
+        Countries.AddRange(_movie.Pays.Select(x => x.Nom ?? ""));
         Language = _movie.LangueOriginale;
         MovieLength = _movie.DureeMinute is null ? "Unknown" : $"{_movie.DureeMinute}";
         Genres.Clear();
@@ -190,9 +236,23 @@ public class MovieViewModel : ViewModelBase
         Screenwriters.Clear();
         Screenwriters.AddRange(_movie.Scenaristes.Select(x => x.Nom));
         Actors.Clear();
-        Actors.AddRange(_movie.Acteurs.Select(x => x.Nom));
+        Actors.AddRange(_movie.Acteurs.Select(x => x.Nom ?? ""));
         Trailers.Clear();
-        Trailers.AddRange(_movie.BandesAnnonces.Select(x => x.Url));
+        Trailers.AddRange(_movie.BandesAnnonces.Select(x => x.Url ?? ""));
+    }
+
+    private void SetRecommendations()
+    {
+        if (_movie?.FilmId is null)
+        {
+            return;
+        }
+        
+        _movieRecommendations.Clear();
+        _movieRecommendations.AddRange(_filmRepository.GetRecommendations(_movie.FilmId));
+        
+        Recommendations.Clear();
+        Recommendations.AddRange(_movieRecommendations.Where(x => x.Titre is not null).Select(x => x.Titre ?? ""));
     }
 
     private async Task RentCommandExecute()
@@ -233,7 +293,6 @@ public class MovieViewModel : ViewModelBase
     
     private void ActorCommandExecute()
     {
-
         var parameters = new NavigationParameters
         {
             { PERSON_PARAMETER, _movie?.Acteurs.FirstOrDefault(x => x.Nom == SelectedActor) }
@@ -252,6 +311,44 @@ public class MovieViewModel : ViewModelBase
         _regionManager.RequestNavigate(Regions.MainRegion, nameof(PersonView), parameters);
     }
 
+    private void RecommendationCommandExecute()
+    {
+        var movie = _movieRecommendations.FirstOrDefault(x => x.Titre == SelectedRecommendation);
+        
+        var parameters = new NavigationParameters
+        {
+            { MovieGridViewModel.MOVIE_PARAMETER, movie },
+            { IS_RECOMMENDATION_PARAM, true }
+        };
+        
+        _regionManager.RequestNavigate(Regions.MainRegion, nameof(MovieView), parameters);
+    }
+    
+    public async Task LoadMoviePosterAsync()
+    {
+        if (string.IsNullOrEmpty(_movie?.AfficheUrl))
+        {
+            return;
+        }
+
+        try
+        {
+            await using var imageStream = await LoadCoverBitmapAsync();
+            MoviePoster = await Task.Run(() => Bitmap.DecodeToWidth(imageStream, 400));
+        }
+        catch (Exception _)
+        {
+            // ignored
+        }
+    }
+    
+    private async Task<Stream> LoadCoverBitmapAsync()
+    {
+        var client = _httpClientFactory.CreateClient();
+        var data = await client.GetByteArrayAsync(UrlHelper.EnsureHttps(_movie!.AfficheUrl!));
+        return new MemoryStream(data);
+    }
+
     private void NavigateToTrailerView()
     {
         try
@@ -267,4 +364,6 @@ public class MovieViewModel : ViewModelBase
             //something went wrong
         }
     }
+
+    public override bool IsNavigationTarget(NavigationContext navigationContext) => false;
 }
