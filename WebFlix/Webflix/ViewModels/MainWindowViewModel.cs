@@ -58,7 +58,7 @@ public class MainWindowViewModel : ViewModelBase
         _regionManager = regionManager;
         _authService = authService;
         _eventAggregator = eventAggregator;
-        //_clientRepository = clientRepository;
+        
         SignInCommand = ReactiveCommand.Create(SignInCommandExecute);
         LogOutCommand = ReactiveCommand.Create(LogOutCommandExecute);
 
@@ -85,15 +85,14 @@ public class MainWindowViewModel : ViewModelBase
     {
         var overrideAuthentication = UserNameTextBox == "admin" && PasswordTextBox == "admin";
 
-        var (isAuthenticated, errorMessage) = (false, string.Empty);
+        var authResponse = new AuthenticationResponse(false);
         if (!overrideAuthentication)
         {
-            (isAuthenticated, errorMessage) = await _authService.AuthenticateAsync(UserNameTextBox, PasswordTextBox);
+            authResponse = await _authService.AuthenticateAsync(UserNameTextBox, PasswordTextBox);
         }
 
-        if (isAuthenticated || overrideAuthentication)
+        if (authResponse.IsAuthenticated || overrideAuthentication)
         {
-            errorMessage = string.Empty;
             IsErrorMessageVisible = false;
             _regionManager.RequestNavigate(Regions.MainRegion, nameof(SearchView), result =>
             {
@@ -102,7 +101,7 @@ public class MainWindowViewModel : ViewModelBase
         }
         else
         {
-            ErrorMessage = errorMessage;
+            ErrorMessage = authResponse.Message;
             IsErrorMessageVisible = true;
         }
     }

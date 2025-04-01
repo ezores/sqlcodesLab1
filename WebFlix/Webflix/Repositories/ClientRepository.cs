@@ -91,7 +91,7 @@ namespace Webflix.Repositories
         
         // Implémentation des méthodes spécifiques
         
-        public async Task<bool> AuthenticateAsync(string email, string password)
+        public async Task<AuthenticationResponse> AuthenticateAsync(string email, string password)
         {
             await using var context = await _contextFactory.CreateDbContextAsync();
             
@@ -110,11 +110,11 @@ namespace Webflix.Repositories
             {
                 _currentClientId = client.ClientId;
             }
-            
-            return client != null; // Return true if a client was found, false otherwise
+
+            return new AuthenticationResponse(client is not null, client?.ClientId);
         }
 
-        public async Task<Client> GetAuthenticatedClient()
+        public async Task<Client> GetAuthenticatedClientAsync()
         {
             var client = await GetByIdAsync(_currentClientId);
             return client;

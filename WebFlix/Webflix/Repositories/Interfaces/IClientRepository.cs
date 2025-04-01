@@ -16,8 +16,8 @@ namespace Webflix.Repositories.Interfaces
         Task DeleteAsync(int id);
         
         // Méthodes spécifiques pour les cas d'utilisation
-        Task<bool> AuthenticateAsync(string email, string password);
-        Task<Client> GetAuthenticatedClient();
+        Task<AuthenticationResponse> AuthenticateAsync(string email, string password);
+        Task<Client> GetAuthenticatedClientAsync();
         Task<IEnumerable<Emprunt>> GetActiveRentalsAsync(int clientId);
         Task<bool> CanRentMoreFilmsAsync(int clientId);
         Task<int> GetMaxRentalsAllowedAsync(int clientId);

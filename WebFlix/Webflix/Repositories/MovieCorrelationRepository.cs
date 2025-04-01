@@ -5,17 +5,18 @@ using Webflix.Repositories.Interfaces;
 
 namespace Webflix.Repositories;
 
-public class MovieCorrelationRepository(IDbContextFactory<MyDbContext> contextFactory) : IMovieCorrelationRepository
+public class MovieCorrelationRepository(IDbContextFactory<MyDbContext> contextFactory, IRentalRepository rentalRepository) : IMovieCorrelationRepository
 {
-    public List<int> GetRecommendations(int filmId)
+    public IEnumerable<int> GetRecommendations(int filmId, IEnumerable<int> alreadyRentedMovieIds)
     {
         using var context = contextFactory.CreateDbContext();
 
         return context.MovieCorrelations
             .Where(x => x.FirstMovie == filmId)
             .OrderByDescending(x => x.Correlation)
-            .Take(3)
             .Select(x => x.SecondMovie)
-            .ToList();
+            .ToList()
+            .Except(alreadyRentedMovieIds)
+            .Take(3);
     }
 }

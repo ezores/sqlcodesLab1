@@ -10,4 +10,5 @@ public interface IRentalRepository
     Task AddAsync(Emprunt emprunt);
     Task DeleteAsync(Emprunt emprunt);
     Task<Emprunt?> GetActiveRentalAsync(int clientId, int filmId);
+    IEnumerable<int> GetRentedCopyIdsByClient(int clientId);
 }

@@ -26,7 +26,7 @@ namespace Webflix.Repositories.Interfaces
             string actor, string director, 
             string language, string country);
 
-        IEnumerable<Film> GetRecommendations(int filmId);
+        IEnumerable<Film>? GetRecommendations(int filmId, int? clientId);
 
         double? GetMovieRating(int filmId);
     }

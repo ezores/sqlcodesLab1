@@ -1,10 +1,9 @@
+using System.Collections;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NP.Utilities;
-using Webflix.Models;
 using Webflix.Models.Entities;
 using Webflix.Repositories.Interfaces;
 
@@ -15,12 +14,20 @@ namespace Webflix.Repositories
         private IDbContextFactory<MyDbContext> _contextFactory;
         private readonly IMovieCorrelationRepository _movieCorrelationRepository;
         private readonly IMovieRatingRepository _movieRatingRepository;
+        private readonly IRentalRepository _rentalRepository;
+        private readonly ICopieFilmRepository _copieFilmRepository;
         
-        public FilmRepository(IDbContextFactory<MyDbContext> contextFactory, IMovieCorrelationRepository movieCorrelationRepository, IMovieRatingRepository movieRatingRepository)
+        public FilmRepository(IDbContextFactory<MyDbContext> contextFactory, 
+            IMovieCorrelationRepository movieCorrelationRepository, 
+            IMovieRatingRepository movieRatingRepository,
+            IRentalRepository rentalRepository,
+            ICopieFilmRepository copieFilmRepository)
         {
             _contextFactory = contextFactory;
             _movieCorrelationRepository = movieCorrelationRepository;
             _movieRatingRepository = movieRatingRepository;
+            _rentalRepository = rentalRepository;
+            _copieFilmRepository = copieFilmRepository;
         }
         
         public async Task<Film> GetByIdAsync(int id)
@@ -206,9 +213,17 @@ namespace Webflix.Repositories
 
         public double? GetMovieRating(int filmId) => _movieRatingRepository.GetFilmRating(GetFakeIdByMovieId(filmId));
 
-        public IEnumerable<Film> GetRecommendations(int filmId)
+        public IEnumerable<Film>? GetRecommendations(int filmId, int? clientId)
         {
-            var recIds = _movieCorrelationRepository.GetRecommendations(GetFakeIdByMovieId(filmId));
+            if (clientId is null)
+            {
+                return null;
+            }
+            
+            var rentedCopies = _rentalRepository.GetRentedCopyIdsByClient(clientId.Value);
+            var alreadyRentedMovieIds = _copieFilmRepository.GetMovieIdsFromCopyIds(rentedCopies);
+            var recIds = _movieCorrelationRepository.GetRecommendations(GetFakeIdByMovieId(filmId), alreadyRentedMovieIds.Select(GetFakeIdByMovieId));
+            
             List<Film> recommendations = [];
 
             foreach (var id in recIds)

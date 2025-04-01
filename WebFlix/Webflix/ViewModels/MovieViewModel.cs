@@ -12,12 +12,11 @@ using MsBox.Avalonia;
 using Prism.Regions;
 using ReactiveUI;
 using Webflix.Helpers;
-using Webflix.Models;
 using Webflix.Models.Entities;
-using Webflix.Repositories;
 using Webflix.Repositories.Interfaces;
 using Webflix.Resources;
 using Webflix.Services;
+using Webflix.Services.Interfaces;
 using Webflix.Views;
 
 namespace Webflix.ViewModels;
@@ -213,7 +212,7 @@ public class MovieViewModel : ViewModelBase
         }
         
         InitView();
-        SetRecommendations();
+        SetRecommendationsAsync().Await();
     }
 
     private void InitView()
@@ -241,15 +240,17 @@ public class MovieViewModel : ViewModelBase
         Trailers.AddRange(_movie.BandesAnnonces.Select(x => x.Url ?? ""));
     }
 
-    private void SetRecommendations()
+    private async Task SetRecommendationsAsync()
     {
         if (_movie?.FilmId is null)
         {
             return;
         }
-        
+
+        var client = await _clientRepository.GetAuthenticatedClientAsync();
+        var recommendations = _filmRepository.GetRecommendations(_movie.FilmId, client.ClientId);
         _movieRecommendations.Clear();
-        _movieRecommendations.AddRange(_filmRepository.GetRecommendations(_movie.FilmId));
+        _movieRecommendations.AddRange(recommendations ?? []);
         
         Recommendations.Clear();
         Recommendations.AddRange(_movieRecommendations.Where(x => x.Titre is not null).Select(x => x.Titre ?? ""));
@@ -258,9 +259,9 @@ public class MovieViewModel : ViewModelBase
     private async Task RentCommandExecute()
     {
         // Logique pour rent le movie avec le LocationService
-        Client client = await _clientRepository.GetAuthenticatedClient();
-        int filmId = _movie.FilmId;
-        IEnumerable<CopieFilm> availableCopies = await _copieFilmService.getAvailableCopies(filmId);
+        var client = await _clientRepository.GetAuthenticatedClientAsync();
+        var filmId = _movie.FilmId;
+        var availableCopies = (await _copieFilmService.GetAvailableCopiesAsync(filmId)).ToList();
 
         if (!await _clientRepository.CanRentMoreFilmsAsync(client.ClientId)) {
             await ShowMessage("Maximum location reached");
@@ -270,7 +271,7 @@ public class MovieViewModel : ViewModelBase
         }
         else
         {
-            await _copieFilmService.RentMovie(availableCopies, client.ClientId);
+            await _copieFilmService.RentMovieAsync(availableCopies, client.ClientId);
             _rented = true;
             await ShowMessage("The movie was rented succesfully");
         }
@@ -278,9 +279,9 @@ public class MovieViewModel : ViewModelBase
     private async Task ReturnCommandExecute()
     {
         // Logique pour rent le movie avec le LocationService
-        Client client = await _clientRepository.GetAuthenticatedClient();
+        Client client = await _clientRepository.GetAuthenticatedClientAsync();
         int filmId = _movie.FilmId;
-        IEnumerable<CopieFilm> availableCopies = await _copieFilmService.getAvailableCopies(filmId);
+        IEnumerable<CopieFilm> availableCopies = await _copieFilmService.GetAvailableCopiesAsync(filmId);
         await _copieFilmService.ReturnMovie(filmId, client.ClientId);
         await ShowMessage("The movie was returned succesfully");
     }

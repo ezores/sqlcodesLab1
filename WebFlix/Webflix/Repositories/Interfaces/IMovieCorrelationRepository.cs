@@ -4,5 +4,5 @@ namespace Webflix.Repositories.Interfaces;
 
 public interface IMovieCorrelationRepository
 {
-    List<int> GetRecommendations(int filmId);
+    IEnumerable<int> GetRecommendations(int filmId, IEnumerable<int> alreadyRentedMovieIds);
 }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -106,6 +107,13 @@ namespace Webflix.Repositories
             copie.Statut = statut;
             await context.SaveChangesAsync();
             return true;
+        }
+
+        public IEnumerable<int> GetMovieIdsFromCopyIds(IEnumerable<int> copyIds)
+        {
+            using var context = _contextFactory.CreateDbContext();
+
+            return context.CopiesFilm.Where(x => copyIds.Contains(x.CopieId)).Select(x => x.FilmId).ToList();
         }
     }
 }
