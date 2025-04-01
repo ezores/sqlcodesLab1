@@ -248,9 +248,8 @@ public class MovieViewModel : ViewModelBase
         }
 
         var client = await _clientRepository.GetAuthenticatedClientAsync();
-        var recommendations = _filmRepository.GetRecommendations(_movie.FilmId, client.ClientId);
         _movieRecommendations.Clear();
-        _movieRecommendations.AddRange(recommendations ?? []);
+        _movieRecommendations.AddRange(_filmRepository.GetRecommendations(_movie.FilmId, client.ClientId) ?? []);
         
         Recommendations.Clear();
         Recommendations.AddRange(_movieRecommendations.Where(x => x.Titre is not null).Select(x => x.Titre ?? ""));

@@ -217,7 +217,8 @@ namespace Webflix.Repositories
             }
 
             var alreadyRentedMovieIds = _clientMovieRepository.GetRentedMoviesByClientId(clientId.Value);
-            var recIds = _movieCorrelationRepository.GetRecommendations(GetFakeIdByMovieId(filmId), alreadyRentedMovieIds.Select(GetFakeIdByMovieId));
+            var recIds = _movieCorrelationRepository.GetRecommendations(GetFakeIdByMovieId(filmId), 
+                alreadyRentedMovieIds.Select(GetFakeIdByMovieId));
             
             List<Film> recommendations = [];
 
