@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,14 +13,11 @@ namespace Webflix.Repositories
     public class CopieFilmRepository : ICopieFilmRepository
     {
         private IDbContextFactory<MyDbContext> _contextFactory;
-        // private readonly MyDbContext context;
         
         public CopieFilmRepository(IDbContextFactory<MyDbContext> contextFactory)
         {
             _contextFactory = contextFactory;
         }
-        
-        // Implémentation des méthodes CRUD de base
         
         public async Task<CopieFilm> GetByIdAsync(int id)
         {

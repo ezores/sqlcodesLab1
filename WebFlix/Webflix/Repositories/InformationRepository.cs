@@ -7,7 +7,6 @@ namespace Webflix.Repositories;
 
 public class InformationRepository : IInformationRepository
 {
-    // private readonly MyDbContext _dbContext;
     private readonly IDbContextFactory<MyDbContext> _contextFactory;
     public InformationRepository(IDbContextFactory<MyDbContext> contextFactory)
     {

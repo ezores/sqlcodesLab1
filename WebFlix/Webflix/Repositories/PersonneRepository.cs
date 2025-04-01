@@ -11,15 +11,12 @@ namespace Webflix.Repositories
 {
     public class PersonneRepository : IPersonneRepository
     {
-        // private readonly MyDbContext context;
         private readonly IDbContextFactory<MyDbContext> _contextFactory;
         
         public PersonneRepository(IDbContextFactory<MyDbContext> contextFactory)
         {
             _contextFactory = contextFactory;
         }
-        
-        // Implémentation des méthodes CRUD de base
         
         public async Task<Personne> GetByIdAsync(int id)
         {

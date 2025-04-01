@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Webflix.Models;
 using Webflix.Repositories.Interfaces;
 using Webflix.Services.Interfaces;
 
@@ -17,58 +18,39 @@ namespace Webflix.Services
             _clientRepository = clientRepository;
             _employeRepository = employeRepository;
         }
-
-        // public async Task<(bool IsAuthenticated, string ErrorMessage)> AuthenticateAsync(string username, string password)
-        // {
-        //     username = username?.Trim().ToLower(); // Normalize casing
-        //     password = password?.Trim();
-        //
-        //     if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-        //         return (false, "Username or password cannot be empty.");
-        //
-        //     try
-        //     {
-        //         bool isClient = await _clientRepository.AuthenticateAsync(username, password);
-        //         if (isClient)
-        //             return (true, "");
-        //
-        //         bool isEmployee = await _employeRepository.AuthenticateAsync(username, password);
-        //         if (isEmployee)
-        //             return (true, "");
-        //
-        //         return (false, "Invalid credentials. Please try again.");
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return (false, $"Database error: {ex.Message}");
-        //     }
-        // }
-        public async Task<(bool, string)> AuthenticateAsync(string email, string password)
+        
+        public async Task<AuthenticationResponse> AuthenticateAsync(string? email, string? password)
         {
-            email = email?.Trim();
-            password = password?.Trim();
-
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-                return (false, "Email and password are required.");
+            {
+                return new AuthenticationResponse(isAuthenticated: false)
+                {
+                    Message = "Email and password are required."
+                };
+            }
+                
+            email = email.Trim();
+            password = password.Trim();
 
             try
             {
-                bool isAuthenticated = await _clientRepository.AuthenticateAsync(email, password);
+                var response = await _clientRepository.AuthenticateAsync(email, password);
 
-                if (isAuthenticated)
+                if (!response.IsAuthenticated)
                 {
-                    return (true, string.Empty); // Success, no error message
+                    response.Message = "Invalid credentials. Please try again.";
                 }
-                else
-                {
-                    return (false, "Invalid credentials. Please try again.");
-                }
+                
+                return response;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[ERROR] Authentication failed: {ex.Message}");
-                return (false, "An error occurred during authentication.");
+                return new AuthenticationResponse(isAuthenticated: false)
+                {
+                    Message = "An error occurred during authentication."
+                };
             }
         }
     }
-}
+} 

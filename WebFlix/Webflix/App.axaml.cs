@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Regions;
+using Webflix.Models.Entities;
 using Webflix.Repositories;
 using Webflix.Repositories.Interfaces;
 using Webflix.Resources;
@@ -42,9 +43,13 @@ public partial class App : PrismApplication
         containerRegistry.RegisterScoped<IClientRepository, ClientRepository>();
         containerRegistry.RegisterScoped<IRentalRepository, RentalRepository>();
         containerRegistry.RegisterScoped<IInformationRepository, InformationRepository>();
+        containerRegistry.RegisterScoped<IMovieRatingRepository, MovieRatingRepository>();
+        containerRegistry.RegisterScoped<IMovieCorrelationRepository, MovieCorrelationRepository>();
+        containerRegistry.RegisterScoped<IClientMovieRepository, ClientMovieRepository>();
         
         // Services
         containerRegistry.RegisterScoped<IAuthenticationService, AuthenticationService>();
+        containerRegistry.RegisterScoped<ICopieFilmService, CopieFilmService>();
         
         // Navigation
         containerRegistry.RegisterForNavigation<SearchView, SearchViewModel>();

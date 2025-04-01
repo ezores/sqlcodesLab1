@@ -20,7 +20,7 @@ public class ViewModelBase : ReactiveObject, INavigationAware
         _navigationService = navigationContext.NavigationService;
     }
 
-    public bool IsNavigationTarget(NavigationContext navigationContext) => true;
+    public virtual bool IsNavigationTarget(NavigationContext navigationContext) => true;
 
     public virtual void OnNavigatedFrom(NavigationContext navigationContext)
     {

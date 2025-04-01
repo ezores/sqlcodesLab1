@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Webflix.Models;
@@ -9,7 +11,6 @@ namespace Webflix.Repositories;
 
 public class RentalRepository : IRentalRepository
 {
-    // private readonly MyDbContext _context;
     private readonly IDbContextFactory<MyDbContext> _contextFactory;
     public RentalRepository(IDbContextFactory<MyDbContext> contextFactory)
     {

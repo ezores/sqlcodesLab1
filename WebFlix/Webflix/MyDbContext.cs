@@ -24,24 +24,13 @@ public class MyDbContext : DbContext
     public DbSet<GenreFilm> GenresFilms { get; set; }
     public DbSet<PaysFilm> PaysFilms { get; set; }
     public DbSet<ScenaristeFilm> ScenaristesFilms { get; set; }
+    public DbSet<MovieRating> MovieRatings { get; set; }
+    public DbSet<MovieCorrelation> MovieCorrelations { get; set; }
+    public DbSet<ClientMovie> ClientMovies { get; set; }
     
     public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
     {
     }
-    
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // {
-    //     optionsBuilder.UseOracle("User Id=EQUIPE201;Password=yy3IR1VP;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=bdlog660.ens.ad.etsmtl.ca)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCLPDB.ens.ad.etsmtl.ca)))")
-    //         //.LogTo(Console.WriteLine)
-    //         .LogTo(
-    //             message => Console.WriteLine($"EF Core: {message}"),  // Log SQL and parameters
-    //             new[] { DbLoggerCategory.Database.Command.Name },
-    //             LogLevel.Debug
-    //         )
-    //         .EnableSensitiveDataLogging();
-    //     
-    // }
-    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Configuration de la conversion pour l'enum StatutCopie
@@ -69,6 +58,21 @@ public class MyDbContext : DbContext
             
         modelBuilder.Entity<Emprunt>()
             .HasKey(e => new { e.CopieId, e.ClientId });
+        
+        modelBuilder.Entity<ClientMovie>()
+            .HasKey(cm => new { cm.ClientId, cm.MovieId });
+        
+        modelBuilder.Entity<MovieRating>(entity =>
+        {
+            entity.HasNoKey();
+            entity.ToView("VUE_MOYENNE");
+        });
+        
+        modelBuilder.Entity<MovieCorrelation>(entity =>
+        {
+            entity.HasNoKey();
+            entity.ToView("VUE_CORRELATIONS");
+        });
             
         // Configuration des relations
         modelBuilder.Entity<Film>()
