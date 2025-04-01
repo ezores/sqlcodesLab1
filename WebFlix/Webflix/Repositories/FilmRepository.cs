@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NP.Utilities;
 using Webflix.Models.Entities;
 using Webflix.Repositories.Interfaces;
 
@@ -14,20 +13,17 @@ namespace Webflix.Repositories
         private IDbContextFactory<MyDbContext> _contextFactory;
         private readonly IMovieCorrelationRepository _movieCorrelationRepository;
         private readonly IMovieRatingRepository _movieRatingRepository;
-        private readonly IRentalRepository _rentalRepository;
-        private readonly ICopieFilmRepository _copieFilmRepository;
+        private readonly IClientMovieRepository _clientMovieRepository;
         
         public FilmRepository(IDbContextFactory<MyDbContext> contextFactory, 
             IMovieCorrelationRepository movieCorrelationRepository, 
             IMovieRatingRepository movieRatingRepository,
-            IRentalRepository rentalRepository,
-            ICopieFilmRepository copieFilmRepository)
+            IClientMovieRepository clientMovieRepository)
         {
             _contextFactory = contextFactory;
             _movieCorrelationRepository = movieCorrelationRepository;
             _movieRatingRepository = movieRatingRepository;
-            _rentalRepository = rentalRepository;
-            _copieFilmRepository = copieFilmRepository;
+            _clientMovieRepository = clientMovieRepository;
         }
         
         public async Task<Film> GetByIdAsync(int id)
@@ -219,9 +215,8 @@ namespace Webflix.Repositories
             {
                 return null;
             }
-            
-            var rentedCopies = _rentalRepository.GetRentedCopyIdsByClient(clientId.Value);
-            var alreadyRentedMovieIds = _copieFilmRepository.GetMovieIdsFromCopyIds(rentedCopies);
+
+            var alreadyRentedMovieIds = _clientMovieRepository.GetRentedMoviesByClientId(clientId.Value);
             var recIds = _movieCorrelationRepository.GetRecommendations(GetFakeIdByMovieId(filmId), alreadyRentedMovieIds.Select(GetFakeIdByMovieId));
             
             List<Film> recommendations = [];

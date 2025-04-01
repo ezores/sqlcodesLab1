@@ -108,12 +108,5 @@ namespace Webflix.Repositories
             await context.SaveChangesAsync();
             return true;
         }
-
-        public IEnumerable<int> GetMovieIdsFromCopyIds(IEnumerable<int> copyIds)
-        {
-            using var context = _contextFactory.CreateDbContext();
-
-            return context.CopiesFilm.Where(x => copyIds.Contains(x.CopieId)).Select(x => x.FilmId).ToList();
-        }
     }
 }

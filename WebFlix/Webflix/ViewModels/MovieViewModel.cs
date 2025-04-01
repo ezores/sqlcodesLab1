@@ -27,7 +27,7 @@ public class MovieViewModel : ViewModelBase
     public static readonly string IS_RECOMMENDATION_PARAM = "is-recommendation";
     
     private readonly IRegionManager _regionManager;
-    private readonly CopieFilmService _copieFilmService;
+    private readonly ICopieFilmService _copieFilmService;
     private readonly IClientRepository _clientRepository;
     private readonly IFilmRepository _filmRepository;
     private readonly IHttpClientFactory _httpClientFactory;
@@ -173,7 +173,7 @@ public class MovieViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> ReturnCommand { get; set; }
     
     public MovieViewModel(IRegionManager regionManager, 
-        CopieFilmService copieFilmService, 
+        ICopieFilmService copieFilmService, 
         IClientRepository clientRepository,
         IFilmRepository filmRepository,
         IHttpClientFactory httpClientFactory)
@@ -271,7 +271,7 @@ public class MovieViewModel : ViewModelBase
         }
         else
         {
-            await _copieFilmService.RentMovieAsync(availableCopies, client.ClientId);
+            await _copieFilmService.RentMovieAsync(filmId, availableCopies, client.ClientId);
             _rented = true;
             await ShowMessage("The movie was rented succesfully");
         }

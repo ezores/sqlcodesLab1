@@ -26,6 +26,7 @@ public class MyDbContext : DbContext
     public DbSet<ScenaristeFilm> ScenaristesFilms { get; set; }
     public DbSet<MovieRating> MovieRatings { get; set; }
     public DbSet<MovieCorrelation> MovieCorrelations { get; set; }
+    public DbSet<ClientMovie> ClientMovies { get; set; }
     
     public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
     {
@@ -57,6 +58,9 @@ public class MyDbContext : DbContext
             
         modelBuilder.Entity<Emprunt>()
             .HasKey(e => new { e.CopieId, e.ClientId });
+        
+        modelBuilder.Entity<ClientMovie>()
+            .HasKey(cm => new { cm.ClientId, cm.MovieId });
         
         modelBuilder.Entity<MovieRating>(entity =>
         {

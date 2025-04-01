@@ -18,7 +18,5 @@ namespace Webflix.Repositories.Interfaces
         Task<IEnumerable<CopieFilm>> GetAvailableCopiesAsync(int filmId);
         Task<bool> IsAvailableAsync(int copieId);
         Task<bool> UpdateStatusAsync(int copieId, StatutCopie statut);
-
-        IEnumerable<int> GetMovieIdsFromCopyIds(IEnumerable<int> copyIds);
     }
 }

@@ -5,27 +5,33 @@ using System.Threading.Tasks;
 using Webflix.Models;
 using Webflix.Models.Entities;
 using Webflix.Repositories.Interfaces;
+using Webflix.Services.Interfaces;
 
 namespace Webflix.Services;
 
-public class CopieFilmService
+public class CopieFilmService : ICopieFilmService
 {
     private readonly ICopieFilmRepository _copieFilmRepository;
     private readonly IClientRepository _clientRepository;
     private readonly IRentalRepository _rentalRepository;
+    private readonly IClientMovieRepository _clientMovieRepository;
     
-    public CopieFilmService(ICopieFilmRepository copieFilmRepository, IClientRepository clientRepository, IRentalRepository rentalRepository)
+    public CopieFilmService(ICopieFilmRepository copieFilmRepository, 
+        IClientRepository clientRepository, 
+        IRentalRepository rentalRepository,
+        IClientMovieRepository clientMovieRepository)
     {
         _copieFilmRepository = copieFilmRepository;
         _clientRepository = clientRepository;
         _rentalRepository = rentalRepository;
+        _clientMovieRepository = clientMovieRepository;
     }
     
     public Task<bool> CheckIfCanRentMore(int clientId) => _clientRepository.CanRentMoreFilmsAsync(clientId);
     
     public Task<IEnumerable<CopieFilm>> GetAvailableCopiesAsync(int filmId) => _copieFilmRepository.GetAvailableCopiesAsync(filmId);
     
-    public async Task RentMovieAsync(IEnumerable<CopieFilm> availableCopies, int clientId)
+    public async Task RentMovieAsync(int filmId, IEnumerable<CopieFilm> availableCopies, int clientId)
     {
         var selectedCopyId = availableCopies.First().CopieId;
         await _copieFilmRepository.UpdateStatusAsync(selectedCopyId, StatutCopie.PRETE);
@@ -40,6 +46,7 @@ public class CopieFilmService
         };
         
         await _rentalRepository.AddAsync(newRental);
+        await _clientMovieRepository.AddAsync(new ClientMovie { ClientId = clientId, MovieId = filmId});
         Console.WriteLine($"Movie rented successfully: {selectedCopyId}" + " by " +  client.Courriel);
     }
     

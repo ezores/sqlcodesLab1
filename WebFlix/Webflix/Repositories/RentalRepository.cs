@@ -42,10 +42,4 @@ public class RentalRepository : IRentalRepository
                         && e.Copie.FilmId == filmId)
             .FirstOrDefaultAsync();
     }
-
-    public IEnumerable<int> GetRentedCopyIdsByClient(int clientId)
-    {
-        using var context = _contextFactory.CreateDbContext();
-        return context.Emprunts.Where(x => x.ClientId == clientId).Select(x => x.CopieId).ToList();
-    }
 }
