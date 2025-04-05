@@ -101,8 +101,13 @@ public class MovieViewModel : ViewModelBase
         {
             _rating = Math.Round(value, 2);
             this.RaisePropertyChanged();
+            this.RaisePropertyChanged(nameof(MovieRating));
         }
     }
+
+    private string _movieRating;
+
+    public string MovieRating => $"Rating: {Rating}/5";
     
     public ObservableCollection<string> Countries
     {
